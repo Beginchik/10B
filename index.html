@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Where was he? — ESL Lesson</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/index.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -641,38 +640,39 @@
             .card { padding: 20px; }
         }
     </style>
+<link rel="stylesheet" href="lesson.css">
 </head>
 <body>
     <div class="lesson-container">
         <!-- Navigation -->
         <div class="nav-bar">
-            <span class="nav-title" id="navTitle">Screen 1 of 11</span>
-            <div class="screen-indicator" id="screenDots"></div>
+            <label class="section-picker">Section <select id="sectionSelect" aria-label="Go to lesson section"></select></label><span class="nav-title" id="navTitle">Screen 1 of 11</span>
+            <div class="screen-indicator" id="screenDots" aria-label="Lesson sections"></div>
             <div class="nav-buttons">
                 <button class="nav-btn prev" id="prevBtn" onclick="prevScreen()">← Back</button>
                 <button class="nav-btn next" id="nextBtn" onclick="nextScreen()">Next →</button>
             </div>
         </div>
 
-        <!-- Screen 1: Introduction -->
+        <div class="tool-bar"><button type="button" onclick="openReference('grammar')">Grammar & prepositions</button><button type="button" onclick="openReference('vocab')">Word list</button><label><input type="checkbox" id="soundToggle"> Feedback sounds</label><span id="saveStatus" role="status"></span></div><!-- Screen 1: Introduction -->
         <div class="screen active" id="screen1">
             <div class="card">
                 <span class="stage-label">Preparation step</span>
                 <div class="hero-image">
                     <div class="scene">
                         <div class="person">
-                            <div class="avatar suspect-av">🧑🦱</div>
-                            <div class="label-tag suspect-tag">1 — Jason?</div>
+                            <div class="avatar suspect-av" aria-label="Person 1, in a casual jacket"><svg viewBox="0 0 100 120" aria-hidden="true"><circle cx="50" cy="32" r="21" fill="#efc4a4"/><path d="M28 30Q26 3 50 7Q78 5 73 32L63 22L35 22Z" fill="#302d32"/><path d="M12 120V83Q15 61 37 60L50 73L63 60Q86 62 88 83V120Z" fill="#9a6b4c"/><path d="M38 61L50 74L63 61L59 120H41Z" fill="#f4e9df"/></svg></div>
+                            <div class="label-tag suspect-tag">Person 1</div>
                         </div>
                         <div class="table-prop"></div>
                         <div class="person">
-                            <div class="avatar detective-av">👮</div>
-                            <div class="label-tag">2 — Detective?</div>
+                            <div class="avatar detective-av" aria-label="Person 2, in a suit with a notebook"><svg viewBox="0 0 100 120" aria-hidden="true"><circle cx="50" cy="32" r="21" fill="#c6926b"/><path d="M28 28Q26 3 52 7Q75 7 73 28L64 18L31 23Z" fill="#222b36"/><path d="M9 120V84Q12 62 35 60L50 70L65 60Q88 64 91 84V120Z" fill="#253c59"/><path d="M37 61L50 71L64 61L52 109Z" fill="white"/><path d="M48 73H54L56 96L51 107L46 96Z" fill="#436e9a"/><rect x="62" y="86" width="25" height="30" rx="2" fill="#e7d9ae"/><path d="M66 93H82M66 100H82M66 107H78" stroke="#8a7654" stroke-width="2"/></svg></div>
+                            <div class="label-tag">Person 2</div>
                         </div>
                     </div>
                 </div>
                 <div class="overview-box">
-                    <p>In this lesson, you'll learn how to talk about <strong>where people were</strong> in the past. You'll also learn the <span class="grammar-highlight">past simple of be (was/were)</span> and how to use <span class="grammar-highlight">prepositions in, on, at</span> with time expressions.</p>
+                    <p>In this lesson, you'll learn how to talk about <strong>where people were</strong> in the past. You'll also learn the <span class="grammar-highlight">past simple of be (was/were)</span> and how to use <span class="grammar-highlight">prepositions in, on, at</span> with places and time expressions.</p>
                 </div>
                 <div class="ref-cards">
                     <div class="ref-card" onclick="toggleRef('vocab')">
@@ -742,12 +742,12 @@
             <div class="card">
                 <span class="stage-label">Warm-up</span>
                 <h2>Where were you yesterday?</h2>
-                <div class="warmup-image"></div>
+                <div class="warmup-image" aria-label="Think about yesterday: morning, afternoon, evening"><span>08:00<br>Morning</span><span>14:00<br>Afternoon</span><span>20:00<br>Evening</span></div>
                 <p style="margin-bottom: 20px; color: #475569;">Think about yesterday. Discuss these questions with your teacher.</p>
                 <ul class="question-list">
                     <li>Where were you <span class="clickable-word" onclick="showVocabCard('at')">at</span> 8 o'clock yesterday morning?</li>
                     <li>What day was yesterday? Where were you <span class="clickable-word" onclick="showVocabCard('on')">on</span> that day?</li>
-                    <li>Were you at home <span class="clickable-word" onclick="showVocabCard('in')">in</span> the evening? What did you do?</li>
+                    <li>Were you at home <span class="clickable-word" onclick="showVocabCard('in')">in</span> the evening? Who were you with?</li>
                     <li>Can you remember where you were <span class="clickable-word" onclick="showVocabCard('at')">at</span> the weekend?</li>
                     <li>Were you <span class="clickable-word" onclick="showVocabCard('tired')">tired</span> yesterday? Why?</li>
                 </ul>
@@ -810,57 +810,44 @@
             </div>
         </div>
 
-        <!-- Screen 4: Grammar Discovery - Photo + 10.10 -->
+        <!-- Screen 4: Grammar Discovery - Illustration + 10.10 -->
         <div class="screen" id="screen4">
             <div class="card">
                 <span class="stage-label">Grammar</span>
-                <h2>1 GRAMMAR — past simple: be</h2>
+                <h2>Past simple: be</h2>
 
-                <div class="hero-image" style="height: 260px; margin-bottom: 20px;">
-                    <div class="scene">
-                        <div class="person">
-                            <div class="avatar suspect-av">🧑‍</div>
-                            <div class="label-tag suspect-tag">1</div>
-                        </div>
-                        <div class="table-prop"></div>
-                        <div class="person">
-                            <div class="avatar detective-av">👮</div>
-                            <div class="label-tag">2</div>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>a</h3>
+                <figure class="interview-photo"><img src="assets/images/interview-realistic.png" alt="Two men seated across a table in an interview room. Person 1 is on the left; person 2 is on the right." width="1536" height="1024"><figcaption><span>1</span><span>2</span></figcaption></figure>
+<h3>a</h3>
                 <p style="font-size: 15px; line-height: 1.7; margin-bottom: 20px; color: #334155;">
-                    Last night there was a <span class="clickable-word" onclick="showVocabCard('robbery')">robbery</span> in a bank. Jason Brown is a <span class="clickable-word" onclick="showVocabCard('suspect')">suspect</span>. Look at the photo. Which person is Jason, and which person is a <span class="clickable-word" onclick="showVocabCard('detective')">detective</span>?
+                    Last night there was a <span class="clickable-word" onclick="showVocabCard('robbery')">robbery</span> in a bank. Jason Brown is a <span class="clickable-word" onclick="showVocabCard('suspect')">suspect</span>. Look at the picture. Which person is Jason, and which person is a <span class="clickable-word" onclick="showVocabCard('detective')">detective</span>?
                 </p>
 
                 <h3>b</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.10', this)">🔊 10.10 Listen to the interview</button>
-                <div class="exercise-instruction">Listen to the interview. Complete the gaps.</div>
+                <button class="audio-btn" onclick="playLessonAudio('10.10', this)">Listen to the interview</button>
+                <div class="exercise-instruction">Listen to the interview and complete the gaps.</div>
 
-                <div class="dialogue-box">
+                <div class="dialogue-box" id="dialogueEx">
                     <div class="dialogue-line">
-                        <span class="speaker detective-sp">D</span> Where were you at <input type="text" class="fill-input" data-answer="ten" onkeyup="checkFill(this, 'dialogueEx')" style="width:80px;"> o'clock last night?
+                        <span class="speaker detective-sp">D</span> Where were you at <input type="text" class="fill-input" data-answer="ten" style="width:80px;"> o'clock last night?
                     </div>
                     <div class="dialogue-line">
-                        <span class="speaker jason-sp">J</span> I was at <input type="text" class="fill-input" data-answer="home" onkeyup="checkFill(this, 'dialogueEx')" style="width:100px;">.
+                        <span class="speaker jason-sp">J</span> I was at <input type="text" class="fill-input" data-answer="home" style="width:100px;">.
                     </div>
                     <div class="dialogue-line">
-                        <span class="speaker detective-sp">D</span> You weren't at <input type="text" class="fill-input" data-answer="home" onkeyup="checkFill(this, 'dialogueEx')" style="width:100px;">. Your <input type="text" class="fill-input" data-answer="wife" onkeyup="checkFill(this, 'dialogueEx')" style="width:100px;"> says you were out. She was at home <span class="clickable-word" onclick="showVocabCard('alone')">alone</span>.
+                        <span class="speaker detective-sp">D</span> You weren't at <input type="text" class="fill-input" data-answer="home" style="width:100px;">. Your <input type="text" class="fill-input" data-answer="wife" style="width:100px;"> says you were out. She was at home <span class="clickable-word" onclick="showVocabCard('alone')">alone</span>.
                     </div>
                     <div class="dialogue-line">
-                        <span class="speaker jason-sp">J</span> Oh yes, I remember now. I was in a <input type="text" class="fill-input" data-answer="meeting" onkeyup="checkFill(this, 'dialogueEx')" style="width:120px;">.
+                        <span class="speaker jason-sp">J</span> Oh yes, I remember now. I was in a <input type="text" class="fill-input" data-answer="meeting" style="width:120px;">.
                     </div>
                     <div class="dialogue-line">
-                        <span class="speaker detective-sp">D</span> Were you <input type="text" class="fill-input" data-answer="alone" onkeyup="checkFill(this, 'dialogueEx')" style="width:100px;">?
+                        <span class="speaker detective-sp">D</span> Were you <input type="text" class="fill-input" data-answer="alone" style="width:100px;">?
                     </div>
                     <div class="dialogue-line">
-                        <span class="speaker jason-sp">J</span> No, I wasn't. I was with a <input type="text" class="fill-input" data-answer="friend" onkeyup="checkFill(this, 'dialogueEx')" style="width:100px;">, Kevin Smith. You can ask him.
+                        <span class="speaker jason-sp">J</span> No, I wasn't. I was with a <input type="text" class="fill-input" data-answer="friend" style="width:100px;">, Kevin Smith. You can ask him.
                     </div>
                 </div>
                 <div class="result-summary" id="dialogueExResult" style="display:none;"></div>
-                <button class="reset-btn" onclick="resetExercise('dialogueEx')">🔄 Reset</button>
+                
             </div>
         </div>
 
@@ -869,7 +856,7 @@
             <div class="card">
                 <span class="stage-label">Grammar</span>
                 <h2>Listen and repeat. Then read the rules.</h2>
-                <button class="audio-btn" onclick="playLessonAudio('10.11', this)"> 10.11 Listen and repeat the examples</button>
+                <button class="audio-btn" onclick="playLessonAudio('10.11', this)"> Listen and repeat the examples</button>
 
                 <h3>Positive (+) and Negative (−)</h3>
                 <table class="grammar-table">
@@ -902,20 +889,20 @@
                 <div class="exercise-instruction">Change the present sentences to the past.</div>
                 <div id="chartEx">
                     <div class="fill-sentence">
-                        <strong>Present:</strong> I'm at home. → <strong>Past:</strong> I <input type="text" class="fill-input" data-answer="was" onkeyup="checkFill(this, 'chartEx')" style="width:70px;"> at home.
+                        <strong>Present:</strong> I'm at home. → <strong>Past:</strong> I <input type="text" class="fill-input" data-answer="was" style="width:70px;"> at home.
                     </div>
                     <div class="fill-sentence">
-                        <strong>Present:</strong> You aren't at home. → <strong>Past:</strong> You <input type="text" class="fill-input" data-answer="weren't" onkeyup="checkFill(this, 'chartEx')" style="width:90px;"> at home.
+                        <strong>Present:</strong> You aren't at home. → <strong>Past:</strong> You <input type="text" class="fill-input" data-answer="weren't" style="width:90px;"> at home.
                     </div>
                     <div class="fill-sentence">
-                        <strong>Present:</strong> Are you alone? → <strong>Past:</strong> <input type="text" class="fill-input" data-answer="Were" onkeyup="checkFill(this, 'chartEx')" style="width:80px;"> you alone?
+                        <strong>Present:</strong> Are you alone? → <strong>Past:</strong> <input type="text" class="fill-input" data-answer="Were" style="width:80px;"> you alone?
                     </div>
                     <div class="fill-sentence">
-                        <strong>Present:</strong> No, I'm not. → <strong>Past:</strong> No, I <input type="text" class="fill-input" data-answer="wasn't" onkeyup="checkFill(this, 'chartEx')" style="width:90px;">.
+                        <strong>Present:</strong> No, I'm not. → <strong>Past:</strong> No, I <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;">.
                     </div>
                 </div>
                 <div class="result-summary" id="chartExResult" style="display:none;"></div>
-                <button class="reset-btn" onclick="resetExercise('chartEx')">🔄 Reset</button>
+                
             </div>
         </div>
 
@@ -929,16 +916,16 @@
                 <div class="exercise-instruction">Look at the symbols: <span class="symbol plus">+</span> positive, <span class="symbol minus">−</span> negative, <span class="symbol question">?</span> question</div>
 
                 <div id="practiceA">
-                    <div class="ex-row"><span class="ex-num">1</span> you <span class="symbol question">?</span> — <input type="text" class="fill-input" data-answer="Were you at school yesterday?" onkeyup="checkFillLong(this, 'practiceA')" style="width:280px;"> at school yesterday?</div>
-                    <div class="ex-row"><span class="ex-num">2</span> James <span class="symbol minus">−</span> — James <input type="text" class="fill-input" data-answer="wasn't" onkeyup="checkFill(this, 'practiceA')" style="width:90px;"> very well yesterday.</div>
-                    <div class="ex-row"><span class="ex-num">3</span> We <span class="symbol plus">+</span> — We <input type="text" class="fill-input" data-answer="were" onkeyup="checkFill(this, 'practiceA')" style="width:80px;"> on the plane at 4.00.</div>
-                    <div class="ex-row"><span class="ex-num">4</span> they <span class="symbol question">?</span> — <input type="text" class="fill-input" data-answer="Were they in class yesterday?" onkeyup="checkFillLong(this, 'practiceA')" style="width:280px;"> in class yesterday?</div>
-                    <div class="ex-row"><span class="ex-num">5</span> You <span class="symbol minus">−</span> — You <input type="text" class="fill-input" data-answer="weren't" onkeyup="checkFill(this, 'practiceA')" style="width:90px;"> very hungry this morning.</div>
-                    <div class="ex-row"><span class="ex-num">6</span> I <span class="symbol plus">+</span> — I <input type="text" class="fill-input" data-answer="was" onkeyup="checkFill(this, 'practiceA')" style="width:70px;"> in a <span class="clickable-word" onclick="showVocabCard('meeting')">meeting</span> until 7.00 last night.</div>
-                    <div class="ex-row"><span class="ex-num">7</span> your sister <span class="symbol question">?</span> — <input type="text" class="fill-input" data-answer="Was your sister in London last week?" onkeyup="checkFillLong(this, 'practiceA')" style="width:320px;"> in London last week?</div>
-                    <div class="ex-row"><span class="ex-num">8</span> It <span class="symbol plus">+</span> — It <input type="text" class="fill-input" data-answer="was" onkeyup="checkFill(this, 'practiceA')" style="width:70px;"> a terrible <span class="clickable-word" onclick="showVocabCard('film')">film</span>.</div>
-                    <div class="ex-row"><span class="ex-num">9</span> I <span class="symbol minus">−</span> — I <input type="text" class="fill-input" data-answer="wasn't" onkeyup="checkFill(this, 'practiceA')" style="width:90px;"> at home last weekend.</div>
-                    <div class="ex-row"><span class="ex-num">10</span> Sarah and Emma <span class="symbol plus">+</span> — Sarah and Emma <input type="text" class="fill-input" data-answer="were" onkeyup="checkFill(this, 'practiceA')" style="width:80px;"> tired this morning.</div>
+                    <div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">1</span><input type="text" class="fill-input" data-answer="Were you" style="width:140px;"> at school yesterday?</div>
+                    <div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">2</span>James <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;"> very well yesterday.</div>
+                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">3</span>We <input type="text" class="fill-input" data-answer="were" style="width:80px;"> on the plane at 4.00.</div>
+                    <div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">4</span><input type="text" class="fill-input" data-answer="Were they" style="width:160px;"> in class yesterday?</div>
+                    <div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">5</span>You <input type="text" class="fill-input" data-answer="weren't" style="width:90px;"> very hungry this morning.</div>
+                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">6</span>I <input type="text" class="fill-input" data-answer="was" style="width:70px;"> in a <span class="clickable-word" onclick="showVocabCard('meeting')">meeting</span> until 7.00 last night.</div>
+                    <div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">7</span><input type="text" class="fill-input" data-answer="Was your sister" style="width:200px;"> in London last week?</div>
+                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">8</span>It <input type="text" class="fill-input" data-answer="was" style="width:70px;"> a terrible <span class="clickable-word" onclick="showVocabCard('film')">film</span>.</div>
+                    <div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">9</span>I <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;"> at home last weekend.</div>
+                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">10</span>Sarah and Emma <input type="text" class="fill-input" data-answer="were" style="width:80px;"> tired this morning.</div>
                 </div>
                 <div class="result-summary" id="practiceAResult" style="display:none;"></div>
 
@@ -949,28 +936,28 @@
                     <div class="conversation">
                         <div class="conv-num">1</div>
                         <div class="conv-line"><span class="speaker-a">A</span> Where were you last night?</div>
-                        <div class="conv-line"><span class="speaker-b">B</span> I <input type="text" class="fill-input" data-answer="was" onkeyup="checkFill(this, 'practiceB')" style="width:70px;"> at work all evening.</div>
-                        <div class="conv-line"><span class="speaker-a">A</span> No, you <input type="text" class="fill-input" data-answer="weren't" onkeyup="checkFill(this, 'practiceB')" style="width:90px;">. You <input type="text" class="fill-input" data-answer="were" onkeyup="checkFill(this, 'practiceB')" style="width:70px;"> with Miriam!</div>
-                        <div class="conv-line"><span class="speaker-b">B</span> No, I <input type="text" class="fill-input" data-answer="wasn't" onkeyup="checkFill(this, 'practiceB')" style="width:90px;">!</div>
+                        <div class="conv-line"><span class="speaker-b">B</span> I <input type="text" class="fill-input" data-answer="was" style="width:70px;"> at work all evening.</div>
+                        <div class="conv-line"><span class="speaker-a">A</span> No, you <input type="text" class="fill-input" data-answer="weren't" style="width:90px;">. You <input type="text" class="fill-input" data-answer="were" style="width:70px;"> with Miriam!</div>
+                        <div class="conv-line"><span class="speaker-b">B</span> No, I <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;">!</div>
                     </div>
                     <div class="conversation">
                         <div class="conv-num">2</div>
-                        <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Was" onkeyup="checkFill(this, 'practiceB')" style="width:60px;"> Freddie Mercury an <span class="clickable-word" onclick="showVocabCard('actor')">actor</span>?</div>
-                        <div class="conv-line"><span class="speaker-b">B</span> No, he <input type="text" class="fill-input" data-answer="wasn't" onkeyup="checkFill(this, 'practiceB')" style="width:90px;">. He <input type="text" class="fill-input" data-answer="was" onkeyup="checkFill(this, 'practiceB')" style="width:70px;"> a <span class="clickable-word" onclick="showVocabCard('singer')">singer</span> with Queen.</div>
+                        <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Was" style="width:60px;"> Freddie Mercury an <span class="clickable-word" onclick="showVocabCard('actor')">actor</span>?</div>
+                        <div class="conv-line"><span class="speaker-b">B</span> No, he <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;">. He <input type="text" class="fill-input" data-answer="was" style="width:70px;"> a <span class="clickable-word" onclick="showVocabCard('singer')">singer</span> with Queen.</div>
                     </div>
                     <div class="conversation">
                         <div class="conv-num">3</div>
-                        <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Were" onkeyup="checkFill(this, 'practiceB')" style="width:70px;"> you in Milan yesterday?</div>
-                        <div class="conv-line"><span class="speaker-b">B</span> No, we <input type="text" class="fill-input" data-answer="weren't" onkeyup="checkFill(this, 'practiceB')" style="width:90px;">. We <input type="text" class="fill-input" data-answer="were" onkeyup="checkFill(this, 'practiceB')" style="width:70px;"> in Rome.</div>
+                        <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Were" style="width:70px;"> you in Milan yesterday?</div>
+                        <div class="conv-line"><span class="speaker-b">B</span> No, we <input type="text" class="fill-input" data-answer="weren't" style="width:90px;">. We <input type="text" class="fill-input" data-answer="were" style="width:70px;"> in Rome.</div>
                     </div>
                     <div class="conversation">
                         <div class="conv-num">4</div>
-                        <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Was" onkeyup="checkFill(this, 'practiceB')" style="width:60px;"> the <span class="clickable-word" onclick="showVocabCard('film')">film</span> good?</div>
-                        <div class="conv-line"><span class="speaker-b">B</span> No, it <input type="text" class="fill-input" data-answer="wasn't" onkeyup="checkFill(this, 'practiceB')" style="width:90px;">. It <input type="text" class="fill-input" data-answer="was" onkeyup="checkFill(this, 'practiceB')" style="width:70px;"> very slow!</div>
+                        <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Was" style="width:60px;"> the <span class="clickable-word" onclick="showVocabCard('film')">film</span> good?</div>
+                        <div class="conv-line"><span class="speaker-b">B</span> No, it <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;">. It <input type="text" class="fill-input" data-answer="was" style="width:70px;"> very slow!</div>
                     </div>
                 </div>
                 <div class="result-summary" id="practiceBResult" style="display:none;"></div>
-                <button class="reset-btn" onclick="resetPracticeAB()">🔄 Reset both exercises</button>
+                
             </div>
         </div>
 
@@ -978,34 +965,34 @@
         <div class="screen" id="screen7">
             <div class="card">
                 <span class="stage-label">Pronunciation & Listening</span>
-                <h2>Say the sentences in the past</h2>
+                <h2>Pronunciation & listening</h2>
 
-                <h3>e — 10.12 Listen and say the sentences in the past</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.12', this)">🔊 10.12 Listen and repeat</button>
+                <h3>Listen and say the sentences in the past</h3>
+                <button class="audio-btn" onclick="playLessonAudio('10.12', this)">Listen and repeat</button>
 
-                <div style="background: #f0fdf4; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <div id="pronEx" style="background: #f0fdf4; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
                     <div style="font-size: 15px; line-height: 2.2;">
                         <div><strong>1.</strong> She's a teacher. → <em style="color:#166534;">She was a teacher.</em></div>
-                        <div><strong>2.</strong> They're at home. → <input type="text" class="fill-input" data-answer="They were at home." onkeyup="checkFillLong(this, 'pronEx')" style="width:220px;"></div>
-                        <div><strong>3.</strong> He's tired. → <input type="text" class="fill-input" data-answer="He was tired." onkeyup="checkFillLong(this, 'pronEx')" style="width:180px;"></div>
-                        <div><strong>4.</strong> We're in London. → <input type="text" class="fill-input" data-answer="We were in London." onkeyup="checkFillLong(this, 'pronEx')" style="width:220px;"></div>
-                        <div><strong>5.</strong> I'm not hungry. → <input type="text" class="fill-input" data-answer="I wasn't hungry." onkeyup="checkFillLong(this, 'pronEx')" style="width:200px;"></div>
+                        <div><strong>2.</strong> They're at home. → <input type="text" class="fill-input" data-answer="They were at home." style="width:220px;"></div>
+                        <div><strong>3.</strong> He's tired. → <input type="text" class="fill-input" data-answer="He was tired." style="width:180px;"></div>
+                        <div><strong>4.</strong> We're in London. → <input type="text" class="fill-input" data-answer="We were in London." style="width:220px;"></div>
+                        <div><strong>5.</strong> I'm not hungry. → <input type="text" class="fill-input" data-answer="I wasn't hungry." style="width:200px;"></div>
                     </div>
                 </div>
                 <div class="result-summary" id="pronExResult" style="display:none;"></div>
 
-                <h3 style="margin-top: 30px;">2 LISTENING — 10.13</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.13', this)">🔊 10.13 Listen to the detective interviewing Kevin</button>
-                <div class="exercise-instruction">Listen to the detective interviewing Jason's <span class="clickable-word" onclick="showVocabCard('friend')">friend</span>, Kevin. Complete the information.</div>
+                <h3 style="margin-top: 30px;">Listening</h3>
+                <button class="audio-btn" onclick="playLessonAudio('10.13', this)">Listen to the detective interviewing Kevin</button>
+                <div class="exercise-instruction">Listen and complete the information about Jason's <span class="clickable-word" onclick="showVocabCard('friend')">friend</span>, Kevin.</div>
 
-                <div class="info-card">
+                <div class="info-card" id="kevinEx">
                     <div class="info-row"><span class="info-label">Name:</span><span class="info-value">Kevin Smith</span></div>
-                    <div class="info-row"><span class="info-label">Job:</span><input type="text" class="fill-input" data-answer="teacher" onkeyup="checkFill(this, 'kevinEx')" style="width:150px;"></div>
-                    <div class="info-row"><span class="info-label">Address:</span><input type="text" class="fill-input" data-answer="15" onkeyup="checkFill(this, 'kevinEx')" style="width:60px;"> Market Street</div>
-                    <div class="info-sentence">Kevin knows Jason because they were <input type="text" class="fill-input" data-answer="at school" onkeyup="checkFill(this, 'kevinEx')" style="width:120px;"> together.</div>
-                    <div class="info-sentence">At 5.00 yesterday afternoon, he was in his <input type="text" class="fill-input" data-answer="car" onkeyup="checkFill(this, 'kevinEx')" style="width:100px;">.</div>
-                    <div class="info-sentence">At 7.00, he was in The <input type="text" class="fill-input" data-answer="Red Lion" onkeyup="checkFill(this, 'kevinEx')" style="width:120px;"> <span class="clickable-word" onclick="showVocabCard('pub')">pub</span> in South <input type="text" class="fill-input" data-answer="London" onkeyup="checkFill(this, 'kevinEx')" style="width:120px;">.</div>
-                    <div class="info-sentence">He was with Jason. His <input type="text" class="fill-input" data-answer="wife" onkeyup="checkFill(this, 'kevinEx')" style="width:100px;"> and <input type="text" class="fill-input" data-answer="children" onkeyup="checkFill(this, 'kevinEx')" style="width:120px;"> were there, too.</div>
+                    <div class="info-row"><span class="info-label">Job:</span><input type="text" class="fill-input" data-answer="teacher" style="width:150px;"></div>
+                    <div class="info-row"><span class="info-label">Address:</span><input type="text" class="fill-input" data-answer="15" style="width:60px;"> Market Street</div>
+                    <div class="info-sentence">Kevin knows Jason because they were <input type="text" class="fill-input" data-answer="at school" style="width:120px;"> together.</div>
+                    <div class="info-sentence">At 5.00 yesterday afternoon, he was in his <input type="text" class="fill-input" data-answer="car" style="width:100px;">.</div>
+                    <div class="info-sentence">At 7.00, he was in The <input type="text" class="fill-input" data-answer="Red Lion" style="width:120px;"> <span class="clickable-word" onclick="showVocabCard('pub')">pub</span> in South <input type="text" class="fill-input" data-answer="London" style="width:120px;">.</div>
+                    <div class="info-sentence">He was with Jason. His <input type="text" class="fill-input" data-answer="wife" style="width:100px;"> and <input type="text" class="fill-input" data-answer="children" style="width:120px;"> were there, too.</div>
                 </div>
                 <div class="result-summary" id="kevinExResult" style="display:none;"></div>
 
@@ -1014,7 +1001,7 @@
                     <p style="font-size: 14px; color: #7f1d1d;">Why does the detective think that Kevin's story isn't true?</p>
                 </div>
 
-                <button class="reset-btn" onclick="resetPracticeAB2()">🔄 Reset</button>
+                
             </div>
         </div>
 
@@ -1022,18 +1009,18 @@
         <div class="screen" id="screen8">
             <div class="card">
                 <span class="stage-label">Vocabulary</span>
-                <h2>3 VOCABULARY — in, on, at</h2>
+                <h2>Places: in, on, at</h2>
 
-                <h3>a — 10.14 Listen and check</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.14', this)">🔊 10.14 Listen and check</button>
+                <h3>a — Listen and check</h3>
+                <button class="audio-btn" onclick="playLessonAudio('10.14', this)">Listen and check</button>
                 <div class="exercise-instruction">The next day Jason and Kevin were in <span class="clickable-word" onclick="showVocabCard('prison')">prison</span>. But where was Jason's <span class="clickable-word" onclick="showVocabCard('wife')">wife</span>? Listen and complete the sentences.</div>
 
-                <div style="background: #fefce8; padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #fde047; font-size: 15px; line-height: 2;">
-                    First she was on a <input type="text" class="fill-input" data-answer="plane" onkeyup="checkFill(this, 'inatEx')" style="width:100px;">. Then she was in <input type="text" class="fill-input" data-answer="Boston" onkeyup="checkFill(this, 'inatEx')" style="width:120px;">, in the <input type="text" class="fill-input" data-answer="bank" onkeyup="checkFill(this, 'inatEx')" style="width:100px;">.
+                <div id="inatEx" style="background: #fefce8; padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #fde047; font-size: 15px; line-height: 2;">
+                    First she was on a <input type="text" class="fill-input" data-answer="plane" style="width:100px;">. Then she was in <input type="text" class="fill-input" data-answer="Boston" style="width:120px;">, in the <input type="text" class="fill-input" data-answer="bank" style="width:100px;">.
                 </div>
                 <div class="result-summary" id="inatExResult" style="display:none;"></div>
 
-                <h3 style="margin-top: 24px;">b — Complete the chart with in, on, or at</h3>
+                <h3 style="margin-top: 24px;">b — Places: read the chart</h3>
                 <div class="exercise-instruction">Where were you yesterday at 7.00 p.m.?</div>
 
                 <div class="chart-container">
@@ -1041,7 +1028,7 @@
                         <div class="chart-col">
                             <div class="chart-col-header in-h">in</div>
                             <ul>
-                                <li>the kitchen</li>
+                                <li>London</li><li>bed</li><li>the kitchen</li>
                                 <li>the car</li>
                                 <li>the park</li>
                                 <li>the street</li>
@@ -1068,29 +1055,29 @@
                                 <li>work</li>
                                 <li>school</li>
                                 <li>university</li>
-                                <li>London</li>
-                                <li>bed</li>
+                                
+                                
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <h3 style="margin-top: 24px;">c — 10.15 Listen and check</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.15', this)">🔊 10.15 Listen and check. Repeat the sentences.</button>
+                <h3 style="margin-top: 24px;">c — Listen and repeat</h3>
+                <button class="audio-btn" onclick="playLessonAudio('10.15', this)">Listen and check. Repeat the sentences.</button>
 
                 <div style="background: #f0fdf4; border-radius: 12px; padding: 20px; margin-top: 20px;">
                     <h4 style="color: #166534; margin-bottom: 12px;">Quick practice</h4>
                     <div id="inatPractice">
-                        <div class="fill-sentence">1. I was <input type="text" class="fill-input" data-answer="at" onkeyup="checkFill(this, 'inatPractice')" style="width:50px;"> home at 7.00.</div>
-                        <div class="fill-sentence">2. She was <input type="text" class="fill-input" data-answer="in" onkeyup="checkFill(this, 'inatPractice')" style="width:50px;"> the kitchen.</div>
-                        <div class="fill-sentence">3. They were <input type="text" class="fill-input" data-answer="on" onkeyup="checkFill(this, 'inatPractice')" style="width:50px;"> a bus.</div>
-                        <div class="fill-sentence">4. He was <input type="text" class="fill-input" data-answer="at" onkeyup="checkFill(this, 'inatPractice')" style="width:50px;"> work.</div>
-                        <div class="fill-sentence">5. We were <input type="text" class="fill-input" data-answer="in" onkeyup="checkFill(this, 'inatPractice')" style="width:50px;"> a restaurant.</div>
-                        <div class="fill-sentence">6. I was <input type="text" class="fill-input" data-answer="on" onkeyup="checkFill(this, 'inatPractice')" style="width:50px;"> the <span class="clickable-word" onclick="showVocabCard('beach')">beach</span>.</div>
+                        <div class="fill-sentence">1. I was <input type="text" class="fill-input" data-answer="at" style="width:50px;"> home at 7.00.</div>
+                        <div class="fill-sentence">2. She was <input type="text" class="fill-input" data-answer="in" style="width:50px;"> the kitchen.</div>
+                        <div class="fill-sentence">3. They were <input type="text" class="fill-input" data-answer="on" style="width:50px;"> a bus.</div>
+                        <div class="fill-sentence">4. He was <input type="text" class="fill-input" data-answer="at" style="width:50px;"> work.</div>
+                        <div class="fill-sentence">5. We were <input type="text" class="fill-input" data-answer="in" style="width:50px;"> a restaurant.</div>
+                        <div class="fill-sentence">6. I was <input type="text" class="fill-input" data-answer="on" style="width:50px;"> the <span class="clickable-word" onclick="showVocabCard('beach')">beach</span>.</div>
                     </div>
                     <div class="result-summary" id="inatPracticeResult" style="display:none;"></div>
                 </div>
-                <button class="reset-btn" onclick="resetInAt()">🔄 Reset</button>
+                
             </div>
         </div>
 
@@ -1101,12 +1088,12 @@
                 <h2>You are the detective!</h2>
                 <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">There was a <span class="clickable-word" onclick="showVocabCard('robbery')">robbery</span> at a jewellery shop last Saturday at 7 o'clock in the evening. You are the <span class="clickable-word" onclick="showVocabCard('detective')">detective</span>. Ask your teacher (the <span class="clickable-word" onclick="showVocabCard('suspect')">suspect</span>) questions to find the truth.</p>
 
-                <div class="speaking-prompts">
+                <details class="teacher-card"><summary>Teacher / partner: suspect role card</summary><p>Keep this card hidden from the detective. You are Alex. Your first story: at 7 p.m. you were at home, alone. Later, say that you were with Sam in a restaurant at 7 p.m. Let the detective notice the contradiction. Answer using was / were.</p><p>Swap roles for a second round: your partner invents a place, a time and one contradiction.</p></details><div class="speaking-prompts">
                     <div class="speaking-prompt">
                         <strong>Ask about:</strong><br>
                         • Where the suspect was at 7 o'clock<br>
                         • Who they were with<br>
-                        • What they were doing
+                        • Whether they were alone
                     </div>
                     <div class="speaking-prompt">
                         <strong>Use these questions:</strong><br>
@@ -1117,7 +1104,7 @@
                     <div class="speaking-prompt">
                         <strong>Then decide:</strong><br>
                         • Is the suspect telling the truth?<br>
-                        • Where was he really?
+                        • Which two answers do not agree?
                     </div>
                 </div>
 
@@ -1127,7 +1114,7 @@
                         <li>Where were you at…? / on…?</li>
                         <li>Were you at…? — Yes, I was. / No, I wasn't.</li>
                         <li>Who were you with?</li>
-                        <li>I think you weren't telling the truth because…</li>
+                        <li>I think your story is not true because…</li>
                     </ul>
                 </div>
             </div>
@@ -1139,39 +1126,7 @@
                 <span class="stage-label">Review</span>
                 <h2>What can you remember?</h2>
 
-                <div class="review-grid">
-                    <div class="review-item">
-                        <h4>📖 Vocabulary</h4>
-                        <p style="font-size: 14px; margin-bottom: 10px;">Match the meanings:</p>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <div class="mc-option" onclick="checkReview(this)">a person who solves crimes → <strong>detective</strong></div>
-                            <div class="mc-option" onclick="checkReview(this)">a crime when someone steals → <strong>robbery</strong></div>
-                            <div class="mc-option" onclick="checkReview(this)">a person who maybe did a crime → <strong>suspect</strong></div>
-                            <div class="mc-option" onclick="checkReview(this)">a place where criminals stay → <strong>prison</strong></div>
-                        </div>
-                    </div>
-                    <div class="review-item">
-                        <h4>📐 Grammar: was/were</h4>
-                        <p style="font-size: 14px; margin-bottom: 10px;">Complete:</p>
-                        <div style="font-size: 14px; line-height: 2;">
-                            I ___ at home. → <strong>was</strong><br>
-                            They ___ at school. → <strong>were</strong><br>
-                            She ___ not at work. → <strong>was</strong><br>
-                            ___ you late? → <strong>Were</strong>
-                        </div>
-                    </div>
-                    <div class="review-item">
-                        <h4>⏰ Prepositions of time</h4>
-                        <p style="font-size: 14px; margin-bottom: 10px;">Choose the correct preposition:</p>
-                        <div style="font-size: 14px; line-height: 2;">
-                            ___ 5 o'clock → <strong>at</strong><br>
-                            ___ Monday → <strong>on</strong><br>
-                            ___ the morning → <strong>in</strong><br>
-                            ___ night → <strong>at</strong><br>
-                            ___ the weekend → <strong>at</strong>
-                        </div>
-                    </div>
-                </div>
+                <p class="exercise-instruction">Complete the review without opening the reference. Press Check when you are ready.</p><div id="reviewEx"></div><div id="reviewExResult" class="result-summary" hidden></div>
 
                 <div style="margin-top: 24px; padding: 20px; background: #eff6ff; border-radius: 12px;">
                     <h4 style="color: #1e40af; margin-bottom: 10px;">💭 Reflect</h4>
@@ -1194,7 +1149,7 @@
 
                     <div class="homework-task">
                         <h4>Task 1: Complete the sentences</h4>
-                        <p style="font-size: 14px; color: #475569; margin-bottom: 12px;">Write the correct form of <strong>be</strong> (was/were/wasn't/weren't) and the correct preposition (in/on/at).</p>
+                        <p style="font-size: 14px; color: #475569; margin-bottom: 12px;">Write <strong>was</strong> or <strong>were</strong> and the correct preposition (<strong>in/on/at</strong>). In sentence 5, <strong>not</strong> is already provided.</p>
                         <ol style="font-size: 14px; line-height: 2.2; padding-left: 20px;">
                             <li>My brother ___ at school ___ Monday.</li>
                             <li>The children ___ in the garden ___ the afternoon.</li>
@@ -1227,8 +1182,8 @@
 
     <!-- Vocabulary Support Card Overlay -->
     <div class="vocab-overlay" id="vocabOverlay" onclick="closeVocabCard(event)">
-        <div class="vocab-card" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="closeVocabCard()">&times;</button>
+        <div class="vocab-card" role="dialog" aria-modal="true" aria-labelledby="vcWord" tabindex="-1" onclick="event.stopPropagation()">
+            <button aria-label="Close word card" class="close-btn" onclick="closeVocabCard()">&times;</button>
             <div class="vc-word" id="vcWord"></div>
             <div class="vc-ipa" id="vcIpa"></div>
             <div class="vc-pos" id="vcPos"></div>
@@ -1242,10 +1197,9 @@
         </div>
     </div>
 
-    <script>
-        // Vocabulary data
-        const vocabData = {
-            detective: { word: 'detective', ipa: '/dɪtek.tɪv/', pos: 'noun', def: 'A person whose job is to investigate crimes and find out what happened.', examples: ['The detective looked for clues at the bank.', 'She wants to be a detective.'], translation: 'детектив, сыщик' },
+    
+<script>const vocabData = {
+            detective: { word: 'detective', ipa: '/dɪˈtek.tɪv/', pos: 'noun', def: 'A person whose job is to investigate crimes and find out what happened.', examples: ['The detective looked for clues at the bank.', 'She wants to be a detective.'], translation: 'детектив, сыщик' },
             suspect: { word: 'suspect', ipa: '/ˈsʌs.pekt/', pos: 'noun', def: 'A person who the police think maybe did a crime.', examples: ['The police had one suspect: a man in a black coat.', 'He was the main suspect in the robbery.'], translation: 'подозреваемый' },
             robbery: { word: 'robbery', ipa: '/ˈrɒb.ər.i/', pos: 'noun', def: 'A crime when someone steals money or things from a person, bank, or shop.', examples: ['There was a robbery at the bank yesterday.', 'The robbery happened at 3 o\'clock.'], translation: 'ограбление' },
             prison: { word: 'prison', ipa: '/ˈprɪz.ən/', pos: 'noun', def: 'A place where people are kept as punishment for a crime.', examples: ['The suspect was in prison for two days.', 'He went to prison last year.'], translation: 'тюрьма' },
@@ -1255,7 +1209,7 @@
             singer: { word: 'singer', ipa: '/ˈsɪŋ.ər/', pos: 'noun', def: 'A person who sings, especially as a job.', examples: ['Was she a singer?', 'He was a singer with Queen.'], translation: 'певец, певица' },
             actor: { word: 'actor', ipa: '/ˈæk.tər/', pos: 'noun', def: 'A person who performs in films, plays, or television.', examples: ['Was Freddie Mercury an actor?', 'He wants to be an actor.'], translation: 'актёр' },
             meeting: { word: 'meeting', ipa: '/ˈmiː.tɪŋ/', pos: 'noun', def: 'An occasion when people come together to talk about something.', examples: ['I was in a meeting until 7.00.', 'She was at a meeting at 3 o\'clock.'], translation: 'встреча, совещание' },
-            film: { word: 'film', ipa: '/flm/', pos: 'noun', def: 'A story told with moving pictures, shown at the cinema or on TV.', examples: ['It was a terrible film.', 'We were at the cinema last night.'], translation: 'фильм' },
+            film: { word: 'film', ipa: '/fɪlm/', pos: 'noun', def: 'A story told with moving pictures, shown at the cinema or on TV.', examples: ['It was a terrible film.', 'We were at the cinema last night.'], translation: 'фильм' },
             'shopping centre': { word: 'shopping centre', ipa: '/ˈʃɒp.ɪŋ ˌsen.tər/', pos: 'noun', def: 'A large building with many shops inside.', examples: ['I was at the shopping centre.', 'We were in a shopping centre on Saturday.'], translation: 'торговый центр' },
             wife: { word: 'wife', ipa: '/waɪf/', pos: 'noun', def: 'The woman that a man is married to.', examples: ['His wife says he was out.', 'Where was Jason\'s wife?'], translation: 'жена' },
             friend: { word: 'friend', ipa: '/frend/', pos: 'noun', def: 'A person you like and enjoy spending time with.', examples: ['I was with a friend.', 'Jason\'s friend Kevin was at the pub.'], translation: 'друг' },
@@ -1263,367 +1217,8 @@
             beach: { word: 'beach', ipa: '/biːtʃ/', pos: 'noun', def: 'An area of sand or stones next to the sea.', examples: ['I was on the beach.', 'We were on the beach last summer.'], translation: 'пляж' },
             at: { word: 'at', ipa: '/æt/', pos: 'preposition', def: 'Used for specific times and places.', examples: ['The meeting was at 3 o\'clock.', 'I was at home.'], translation: 'в, у (о времени и месте)' },
             on: { word: 'on', ipa: '/ɒn/', pos: 'preposition', def: 'Used for days, dates, and surfaces/transport.', examples: ['I was at work on Monday.', 'She was on a bus.'], translation: 'в (о днях), на' },
-            in: { word: 'in', ipa: '/n/', pos: 'preposition', def: 'Used for months, years, parts of the day, and enclosed spaces.', examples: ['She was at the park in the afternoon.', 'He was in the kitchen.'], translation: 'в (о месяцах, частях дня, внутри)' },
+            in: { word: 'in', ipa: '/ɪn/', pos: 'preposition', def: 'Used for months, years, parts of the day, and enclosed spaces.', examples: ['She was at the park in the afternoon.', 'He was in the kitchen.'], translation: 'в (о месяцах, частях дня, внутри)' },
             was: { word: 'was', ipa: '/wɒz/', pos: 'verb (past of "be")', def: 'Past form of "be" for I, he, she, it.', examples: ['He was at the office.', 'I was tired yesterday.'], translation: 'был, была, было' },
             were: { word: 'were', ipa: '/wɜː/', pos: 'verb (past of "be")', def: 'Past form of "be" for you, we, they.', examples: ['They were at the cinema.', 'We were happy.'], translation: 'были' }
-        };
-
-        let currentScreen = 1;
-        const totalScreens = 11;
-        let selectedMatchItem = null;
-        let currentExerciseId = null;
-        let currentAudio = null;
-
-        function init() {
-            updateNav();
-            setupDragAndDrop();
-        }
-
-        function updateNav() {
-            document.getElementById('navTitle').textContent = `Screen ${currentScreen} of ${totalScreens}`;
-            document.getElementById('prevBtn').disabled = currentScreen === 1;
-            document.getElementById('nextBtn').disabled = currentScreen === totalScreens;
-            const dotsContainer = document.getElementById('screenDots');
-            dotsContainer.innerHTML = '';
-            for (let i = 1; i <= totalScreens; i++) {
-                const dot = document.createElement('div');
-                dot.className = `screen-dot ${i === currentScreen ? 'active' : ''}`;
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        function nextScreen() {
-            if (currentScreen < totalScreens) {
-                document.getElementById(`screen${currentScreen}`).classList.remove('active');
-                currentScreen++;
-                document.getElementById(`screen${currentScreen}`).classList.add('active');
-                updateNav();
-                window.scrollTo(0, 0);
-            }
-        }
-
-        function prevScreen() {
-            if (currentScreen > 1) {
-                document.getElementById(`screen${currentScreen}`).classList.remove('active');
-                currentScreen--;
-                document.getElementById(`screen${currentScreen}`).classList.add('active');
-                updateNav();
-                window.scrollTo(0, 0);
-            }
-        }
-
-        function toggleRef(type) {
-            const vocabRef = document.getElementById('vocabRef');
-            const grammarRef = document.getElementById('grammarRef');
-            const cards = document.querySelectorAll('.ref-card');
-            if (type === 'vocab') {
-                vocabRef.classList.toggle('active');
-                grammarRef.classList.remove('active');
-                cards[0].classList.toggle('active');
-                cards[1].classList.remove('active');
-            } else {
-                grammarRef.classList.toggle('active');
-                vocabRef.classList.remove('active');
-                cards[1].classList.toggle('active');
-                cards[0].classList.remove('active');
-            }
-        }
-
-        function showVocabCard(wordKey) {
-            const data = vocabData[wordKey];
-            if (!data) return;
-            document.getElementById('vcWord').textContent = data.word;
-            document.getElementById('vcIpa').textContent = data.ipa;
-            document.getElementById('vcPos').textContent = data.pos;
-            document.getElementById('vcDef').textContent = data.def;
-            const examplesList = document.getElementById('vcExamples');
-            examplesList.innerHTML = '';
-            data.examples.forEach(ex => {
-                const li = document.createElement('li');
-                li.textContent = ex;
-                examplesList.appendChild(li);
-            });
-            document.getElementById('vcTranslation').textContent = data.translation;
-            document.getElementById('vcTranslation').classList.remove('show');
-            document.getElementById('vcTransBtn').textContent = 'View translation';
-            document.getElementById('vocabOverlay').classList.add('active');
-        }
-
-        function closeVocabCard(event) {
-            if (event && event.target !== document.getElementById('vocabOverlay')) return;
-            document.getElementById('vocabOverlay').classList.remove('active');
-        }
-
-        function toggleTranslation() {
-            const trans = document.getElementById('vcTranslation');
-            const btn = document.getElementById('vcTransBtn');
-            if (trans.classList.contains('show')) {
-                trans.classList.remove('show');
-                btn.textContent = 'View translation';
-            } else {
-                trans.classList.add('show');
-                btn.textContent = 'Hide translation';
-            }
-        }
-
-        function playVocabAudio() {
-            const word = document.getElementById('vcWord').textContent;
-            if ('speechSynthesis' in window) {
-                speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'en-GB';
-                utterance.rate = 0.8;
-                speechSynthesis.speak(utterance);
-            }
-        }
-
-        function playLessonAudio(trackNum, btn) {
-            const path = `assets/audio/efb_${trackNum}.mp3`;
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
-                document.querySelectorAll('.audio-btn').forEach(b => b.classList.remove('playing'));
-                if (btn.classList.contains('playing')) return;
-            }
-            currentAudio = new Audio(path);
-            currentAudio.play().catch(() => {
-                alert('Audio file not found: ' + path);
-            });
-            btn.classList.add('playing');
-            currentAudio.onended = () => {
-                btn.classList.remove('playing');
-                currentAudio = null;
-            };
-        }
-
-        function setupDragAndDrop() {
-            document.querySelectorAll('.match-item[draggable], .match-item').forEach(item => {
-                item.addEventListener('dragstart', (e) => {
-                    if (item.classList.contains('locked')) { e.preventDefault(); return; }
-                    e.dataTransfer.setData('text/plain', item.dataset.word);
-                    item.style.opacity = '0.5';
-                });
-                item.addEventListener('dragend', (e) => {
-                    item.style.opacity = '1';
-                });
-            });
-            document.querySelectorAll('.drop-zone').forEach(zone => {
-                zone.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    zone.classList.add('drag-over');
-                });
-                zone.addEventListener('dragleave', () => { zone.classList.remove('drag-over'); });
-                zone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    zone.classList.remove('drag-over');
-                    const word = e.dataTransfer.getData('text/plain');
-                    handleMatchDrop(zone, word);
-                });
-            });
-        }
-
-        function selectMatchItem(item, exerciseId) {
-            if (item.classList.contains('locked')) return;
-            document.querySelectorAll(`#${exerciseId} .match-item.selected`).forEach(el => el.classList.remove('selected'));
-            if (selectedMatchItem === item) {
-                selectedMatchItem = null;
-                currentExerciseId = null;
-                return;
-            }
-            item.classList.add('selected');
-            selectedMatchItem = item;
-            currentExerciseId = exerciseId;
-        }
-
-        function dropToZone(zone, exerciseId) {
-            if (!selectedMatchItem || currentExerciseId !== exerciseId) return;
-            const word = selectedMatchItem.dataset.word;
-            handleMatchDrop(zone, word);
-        }
-
-        function handleMatchDrop(zone, word) {
-            const exerciseId = zone.closest('[id]').id;
-            const correct = zone.dataset.answer;
-            document.querySelectorAll(`#${exerciseId} .match-item.selected`).forEach(el => el.classList.remove('selected'));
-            selectedMatchItem = null;
-            const sourceItem = document.querySelector(`#${exerciseId} .match-item[data-word="${word}"]`);
-            if (!sourceItem || sourceItem.classList.contains('locked')) return;
-            if (zone.classList.contains('filled')) return;
-            if (!zone.dataset.attempts) zone.dataset.attempts = '0';
-            zone.dataset.attempts = parseInt(zone.dataset.attempts) + 1;
-            if (word === correct) {
-                zone.textContent = word;
-                zone.classList.add('filled');
-                sourceItem.classList.add('correct', 'locked');
-                playSound('correct');
-                checkExerciseComplete(exerciseId);
-            } else {
-                if (parseInt(zone.dataset.attempts) >= 2) {
-                    zone.textContent = correct;
-                    zone.classList.add('filled');
-                    sourceItem.classList.add('correct', 'locked');
-                    playSound('correct');
-                } else {
-                    zone.classList.add('incorrect-flash');
-                    sourceItem.classList.add('incorrect');
-                    playSound('error');
-                    setTimeout(() => {
-                        zone.classList.remove('incorrect-flash');
-                        sourceItem.classList.remove('incorrect');
-                    }, 500);
-                }
-                checkExerciseComplete(exerciseId);
-            }
-        }
-
-        function checkFill(input, exerciseId) {
-            if (input.classList.contains('correct')) return;
-            const answer = input.dataset.answer.toLowerCase().trim();
-            const value = input.value.toLowerCase().trim();
-            if (!value) { input.classList.remove('correct', 'incorrect'); return; }
-            if (!input.dataset.attempts) input.dataset.attempts = '0';
-            if (value === answer) {
-                input.classList.add('correct');
-                input.classList.remove('incorrect');
-                input.readOnly = true;
-                playSound('correct');
-                checkExerciseComplete(exerciseId);
-            } else {
-                input.dataset.attempts = parseInt(input.dataset.attempts) + 1;
-                if (parseInt(input.dataset.attempts) >= 2) {
-                    input.value = input.dataset.answer;
-                    input.classList.add('correct');
-                    input.classList.remove('incorrect');
-                    input.readOnly = true;
-                    playSound('correct');
-                    checkExerciseComplete(exerciseId);
-                } else {
-                    input.classList.add('incorrect');
-                    playSound('error');
-                    setTimeout(() => { input.classList.remove('incorrect'); }, 800);
-                }
-            }
-        }
-
-        function checkFillLong(input, exerciseId) {
-            if (input.classList.contains('correct')) return;
-            const answer = input.dataset.answer.toLowerCase().trim();
-            const value = input.value.toLowerCase().trim();
-            if (!value) { input.classList.remove('correct', 'incorrect'); return; }
-            if (!input.dataset.attempts) input.dataset.attempts = '0';
-            if (value === answer || value === answer.replace('.', '')) {
-                input.classList.add('correct');
-                input.classList.remove('incorrect');
-                input.readOnly = true;
-                playSound('correct');
-                checkExerciseComplete(exerciseId);
-            } else {
-                input.dataset.attempts = parseInt(input.dataset.attempts) + 1;
-                if (parseInt(input.dataset.attempts) >= 2) {
-                    input.value = input.dataset.answer;
-                    input.classList.add('correct');
-                    input.classList.remove('incorrect');
-                    input.readOnly = true;
-                    playSound('correct');
-                    checkExerciseComplete(exerciseId);
-                } else {
-                    input.classList.add('incorrect');
-                    playSound('error');
-                    setTimeout(() => { input.classList.remove('incorrect'); }, 800);
-                }
-            }
-        }
-
-        function checkExerciseComplete(exerciseId) {
-            const container = document.getElementById(exerciseId);
-            if (!container) return;
-            let total = 0, correct = 0;
-            const inputs = container.querySelectorAll('.fill-input');
-            if (inputs.length > 0) {
-                total = inputs.length;
-                inputs.forEach(inp => { if (inp.classList.contains('correct')) correct++; });
-            }
-            const zones = container.querySelectorAll('.drop-zone');
-            if (zones.length > 0) {
-                total = zones.length;
-                zones.forEach(zone => { if (zone.classList.contains('filled')) correct++; });
-            }
-            if (total > 0 && correct === total) {
-                const resultDiv = document.getElementById(exerciseId + 'Result');
-                if (resultDiv) {
-                    resultDiv.textContent = `✓ ${correct} out of ${total} correct`;
-                    resultDiv.style.display = 'block';
-                }
-            }
-        }
-
-        function resetExercise(exerciseId) {
-            const container = document.getElementById(exerciseId);
-            if (!container) return;
-            container.querySelectorAll('.fill-input').forEach(inp => {
-                inp.value = ''; inp.classList.remove('correct', 'incorrect'); inp.readOnly = false; delete inp.dataset.attempts;
-            });
-            container.querySelectorAll('.match-item').forEach(item => { item.classList.remove('selected', 'correct', 'incorrect', 'locked'); });
-            container.querySelectorAll('.drop-zone').forEach(zone => {
-                const orig = zone.dataset.originalText || zone.textContent;
-                if (!zone.dataset.originalText) zone.dataset.originalText = zone.textContent;
-                zone.textContent = zone.dataset.originalText;
-                zone.classList.remove('filled', 'incorrect-flash', 'drag-over');
-                delete zone.dataset.attempts;
-            });
-            const resultDiv = document.getElementById(exerciseId + 'Result');
-            if (resultDiv) resultDiv.style.display = 'none';
-        }
-
-        function resetPracticeAB() {
-            resetExercise('practiceA');
-            resetExercise('practiceB');
-        }
-        function resetPracticeAB2() {
-            resetExercise('pronEx');
-            resetExercise('kevinEx');
-        }
-        function resetInAt() {
-            resetExercise('inatEx');
-            resetExercise('inatPractice');
-        }
-
-        function checkReview(el) {
-            if (el.classList.contains('correct')) return;
-            el.classList.add('correct');
-            playSound('correct');
-        }
-
-        function playSound(type) {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                if (type === 'correct') {
-                    oscillator.frequency.value = 523.25;
-                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                    oscillator.start(audioCtx.currentTime);
-                    oscillator.stop(audioCtx.currentTime + 0.2);
-                } else if (type === 'error') {
-                    oscillator.frequency.value = 200;
-                    oscillator.type = 'sawtooth';
-                    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                    oscillator.start(audioCtx.currentTime);
-                    oscillator.stop(audioCtx.currentTime + 0.15);
-                }
-            } catch(e) {}
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.drop-zone').forEach(zone => {
-                zone.dataset.originalText = zone.textContent;
-            });
-            init();
-        });
-    </script>
-</body>
+        };</script><script src="lesson.js"></script><dialog id="referenceDialog"><button class="close-reference" type="button" onclick="document.getElementById('referenceDialog').close()">Close reference ×</button><div id="referenceContent"></div></dialog></body>
 </html>
