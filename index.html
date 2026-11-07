@@ -1,652 +1,16 @@
 <!DOCTYPE html>
-<html lang="en-GB">
-<head>
+<html lang="en-GB"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Where was he? — ESL Lesson</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f4f8;
-            color: #1a202c;
-            min-height: 100vh;
-        }
-        .lesson-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .screen { display: none; animation: fadeIn 0.4s ease; }
-        .screen.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Navigation */
-        .nav-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
-        }
-        .nav-title { font-size: 14px; color: #64748b; font-weight: 500; }
-        .nav-buttons { display: flex; gap: 10px; }
-        .nav-btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .nav-btn.prev { background: #e2e8f0; color: #475569; }
-        .nav-btn.next { background: #3b82f6; color: white; }
-        .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-        .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-        .screen-indicator { display: flex; gap: 6px; align-items: center; }
-        .screen-dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; transition: all 0.3s; }
-        .screen-dot.active { background: #3b82f6; width: 24px; border-radius: 4px; }
-
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-        }
-        .stage-label {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #3b82f6;
-            background: #eff6ff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-        }
-        h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; color: #1e293b; }
-        h2 { font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e293b; }
-        h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #334155; }
-        h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: #1e293b; }
-
-        /* Hero */
-        .hero-image {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-image .scene {
-            display: flex;
-            align-items: flex-end;
-            gap: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        .hero-image .person {
-            text-align: center;
-            color: white;
-        }
-        .hero-image .person .avatar {
-            width: 100px;
-            height: 120px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            margin-bottom: 8px;
-        }
-        .hero-image .person .avatar.detective-av { background: rgba(255,255,255,0.15); }
-        .hero-image .person .avatar.suspect-av { background: rgba(255,255,255,0.1); }
-        .hero-image .person .label-tag {
-            background: #22c55e;
-            color: white;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 12px;
-        }
-        .hero-image .person .label-tag.suspect-tag { background: #ef4444; }
-        .hero-image .table-prop {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 60px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px 8px 0 0;
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-        .hero-content { text-align: center; color: white; z-index: 1; }
-        .hero-content .emoji { font-size: 80px; margin-bottom: 10px; }
-        .hero-content h1 { color: white; font-size: 36px; }
-        .hero-content p { color: rgba(255,255,255,0.8); font-size: 16px; }
-
-        /* Overview */
-        .overview-box {
-            background: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 20px;
-            border-radius: 0 12px 12px 0;
-            margin-bottom: 20px;
-        }
-        .overview-box p { font-size: 16px; line-height: 1.6; color: #475569; }
-        .overview-box .grammar-highlight { font-weight: 700; color: #1e40af; font-style: italic; }
-
-        /* Ref cards */
-        .ref-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-        .ref-card {
-            padding: 24px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        .ref-card:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.15); }
-        .ref-card.active { border-color: #3b82f6; background: #eff6ff; }
-        .ref-card .icon { font-size: 36px; margin-bottom: 8px; }
-        .ref-card .label { font-size: 16px; font-weight: 700; color: #1e293b; }
-        .ref-card .sublabel { font-size: 13px; color: #64748b; margin-top: 4px; }
-
-        .ref-section { display: none; animation: slideDown 0.3s ease; }
-        .ref-section.active { display: block; }
-        @keyframes slideDown { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Vocab list */
-        .vocab-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
-        .vocab-item {
-            padding: 12px 16px;
-            background: #f8fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .vocab-item:hover { background: #eff6ff; border-color: #3b82f6; }
-        .vocab-item .word { font-weight: 700; font-size: 15px; color: #1e293b; }
-        .vocab-item .pos { font-size: 12px; color: #64748b; font-style: italic; }
-
-        /* Grammar table */
-        .grammar-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .grammar-table th, .grammar-table td { padding: 10px 14px; text-align: left; border: 1px solid #e2e8f0; font-size: 14px; }
-        .grammar-table th { background: #f1f5f9; font-weight: 600; }
-        .grammar-table .highlight { background: #fef3c7; font-weight: 600; }
-        .grammar-table .green-cell { background: #dcfce7; }
-        .grammar-table .red-cell { background: #fef2f2; }
-        .grammar-note { background: #f0fdf4; border-left: 3px solid #22c55e; padding: 12px; border-radius: 0 8px 8px 0; margin: 10px 0; font-size: 14px; }
-
-        /* Past time box */
-        .past-time-box {
-            background: #eff6ff;
-            border: 2px solid #bfdbfe;
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin: 15px 0;
-        }
-        .past-time-box h4 { color: #1e40af; margin-bottom: 8px; }
-        .past-time-box .expressions { font-size: 15px; line-height: 1.8; color: #1e3a5f; }
-        .past-time-box .expressions strong { color: #1e40af; }
-
-        /* Clickable words */
-        .clickable-word {
-            color: #2563eb;
-            border-bottom: 2px dotted #93c5fd;
-            cursor: pointer;
-            transition: all 0.2s;
-            padding: 0 2px;
-        }
-        .clickable-word:hover { background: #dbeafe; border-radius: 3px; }
-
-        /* Warm-up */
-        .warmup-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 60px;
-        }
-        .question-list { list-style: none; }
-        .question-list li {
-            padding: 16px 20px;
-            background: #f8fafc;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            line-height: 1.5;
-            border-left: 3px solid #3b82f6;
-        }
-        .useful-lang {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-top: 20px;
-        }
-        .useful-lang h4 { font-size: 14px; font-weight: 700; color: #166534; margin-bottom: 8px; }
-        .useful-lang ul { list-style: none; }
-        .useful-lang li { font-size: 14px; color: #15803d; margin-bottom: 4px; padding-left: 16px; position: relative; }
-        .useful-lang li::before { content: '💬'; position: absolute; left: 0; font-size: 12px; }
-
-        /* Exercises */
-        .exercise-instruction {
-            font-size: 16px;
-            color: #475569;
-            margin-bottom: 20px;
-            padding: 12px 16px;
-            background: #eff6ff;
-            border-radius: 8px;
-        }
-        .matching-container { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
-        .matching-col { flex: 1; min-width: 200px; }
-        .matching-col h4 { font-size: 14px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 12px; text-align: center; }
-        .match-item {
-            padding: 14px 18px;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 15px;
-            text-align: center;
-            user-select: none;
-        }
-        .match-item:hover { border-color: #3b82f6; background: #f8fafc; }
-        .match-item.selected { border-color: #3b82f6; background: #dbeafe; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
-        .match-item.correct { border-color: #22c55e; background: #dcfce7; }
-        .match-item.incorrect { border-color: #ef4444; background: #fef2f2; animation: shake 0.4s; }
-        .match-item.locked { pointer-events: none; opacity: 0.8; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-
-        .drop-zone {
-            min-height: 50px;
-            border: 2px dashed #cbd5e1;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #94a3b8;
-            transition: all 0.2s;
-        }
-        .drop-zone.drag-over { border-color: #3b82f6; background: #eff6ff; }
-        .drop-zone.filled { border-style: solid; border-color: #22c55e; background: #dcfce7; color: #166534; font-weight: 600; }
-        .drop-zone.incorrect-flash { border-color: #ef4444; background: #fef2f2; animation: shake 0.4s; }
-
-        .result-summary {
-            text-align: center;
-            padding: 16px;
-            background: #f0fdf4;
-            border-radius: 10px;
-            margin-top: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #166534;
-        }
-        .reset-btn {
-            display: block;
-            margin: 16px auto 0;
-            padding: 10px 24px;
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .reset-btn:hover { background: #e2e8f0; }
-
-        /* Fill-in */
-        .fill-sentence {
-            padding: 14px 18px;
-            background: #f8fafc;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-size: 15px;
-            line-height: 2;
-        }
-        .fill-input {
-            border: none;
-            border-bottom: 2px solid #cbd5e1;
-            background: transparent;
-            padding: 4px 8px;
-            font-size: 15px;
-            font-family: inherit;
-            width: 100px;
-            text-align: center;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .fill-input:focus { border-bottom-color: #3b82f6; }
-        .fill-input.correct { border-bottom-color: #22c55e; color: #166534; font-weight: 600; }
-        .fill-input.incorrect { border-bottom-color: #ef4444; color: #dc2626; }
-
-        /* Dialogue */
-        .dialogue-box {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .dialogue-line {
-            margin-bottom: 12px;
-            font-size: 15px;
-            line-height: 1.8;
-        }
-        .dialogue-line .speaker {
-            font-weight: 700;
-            color: #1e40af;
-            margin-right: 8px;
-        }
-        .dialogue-line .speaker.detective-sp { color: #1e40af; }
-        .dialogue-line .speaker.jason-sp { color: #92400e; }
-
-        /* Audio button */
-        .audio-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 16px;
-            transition: all 0.2s;
-        }
-        .audio-btn:hover { background: #dbeafe; }
-        .audio-btn.playing { background: #3b82f6; color: white; }
-
-        /* Info card */
-        .info-card {
-            background: #fefce8;
-            border: 1px solid #fde047;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-        .info-card .info-row {
-            display: flex;
-            align-items: baseline;
-            margin-bottom: 12px;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        .info-card .info-label {
-            font-weight: 700;
-            color: #1e293b;
-            min-width: 100px;
-        }
-        .info-card .info-value {
-            color: #475569;
-        }
-        .info-card .info-sentence {
-            padding: 10px 14px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        /* Chart */
-        .chart-container {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .chart-container h4 {
-            color: #166534;
-            margin-bottom: 12px;
-        }
-        .chart-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-        .chart-col {
-            background: white;
-            border-radius: 8px;
-            padding: 14px;
-            border: 2px solid #e2e8f0;
-        }
-        .chart-col-header {
-            font-size: 20px;
-            font-weight: 800;
-            text-align: center;
-            padding: 8px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
-        .chart-col-header.in-h { background: #dbeafe; color: #1e40af; }
-        .chart-col-header.on-h { background: #fef3c7; color: #92400e; }
-        .chart-col-header.at-h { background: #fce7f3; color: #9d174d; }
-        .chart-col ul { list-style: none; font-size: 13px; color: #475569; }
-        .chart-col li { padding: 4px 0; border-bottom: 1px solid #f1f5f9; }
-        .chart-col li:last-child { border-bottom: none; }
-
-        /* Reading text */
-        .reading-text {
-            background: #fefce8;
-            border: 1px solid #fde047;
-            border-radius: 12px;
-            padding: 24px;
-            font-size: 15px;
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-        .reading-text p { margin-bottom: 12px; }
-
-        /* Speaking */
-        .speaking-prompts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .speaking-prompt {
-            padding: 16px;
-            background: #f8fafc;
-            border-radius: 10px;
-            border-left: 3px solid #8b5cf6;
-            font-size: 15px;
-        }
-
-        /* Review */
-        .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-        .review-item {
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-        }
-        .review-item h4 { font-size: 14px; color: #3b82f6; margin-bottom: 8px; }
-
-        /* Homework */
-        .homework-section {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-radius: 16px;
-            padding: 30px;
-        }
-        .homework-task {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-        .homework-task h4 { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #92400e; }
-        .checklist { list-style: none; margin-top: 12px; }
-        .checklist li { padding: 6px 0; font-size: 14px; padding-left: 24px; position: relative; }
-        .checklist li::before { content: ''; position: absolute; left: 0; }
-
-        /* Exercise rows */
-        .ex-row {
-            padding: 12px 16px;
-            background: #f8fafc;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            font-size: 15px;
-            line-height: 2;
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-        .ex-row .ex-num {
-            font-weight: 700;
-            color: #3b82f6;
-            min-width: 24px;
-        }
-        .ex-row .symbol {
-            display: inline-block;
-            width: 22px;
-            height: 22px;
-            border: 2px solid #64748b;
-            border-radius: 4px;
-            text-align: center;
-            line-height: 18px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #64748b;
-            margin-right: 4px;
-        }
-        .symbol.plus { color: #22c55e; border-color: #22c55e; }
-        .symbol.minus { color: #ef4444; border-color: #ef4444; }
-        .symbol.question { color: #3b82f6; border-color: #3b82f6; }
-
-        /* Conversation */
-        .conversation {
-            background: #f8fafc;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 16px;
-            border-left: 3px solid #3b82f6;
-        }
-        .conversation .conv-num {
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .conv-line {
-            margin-bottom: 6px;
-            font-size: 15px;
-            line-height: 1.8;
-        }
-        .conv-line .speaker-a { font-weight: 700; color: #1e40af; margin-right: 6px; }
-        .conv-line .speaker-b { font-weight: 700; color: #92400e; margin-right: 6px; }
-
-        /* Vocab overlay */
-        .vocab-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.2s;
-        }
-        .vocab-overlay.active { display: flex; }
-        .vocab-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            max-width: 420px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .vocab-card .close-btn {
-            float: right;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #64748b;
-        }
-        .vocab-card .vc-word { font-size: 24px; font-weight: 800; margin-bottom: 5px; }
-        .vocab-card .vc-ipa { font-size: 14px; color: #64748b; margin-bottom: 10px; }
-        .vocab-card .vc-pos { font-size: 13px; color: #3b82f6; font-style: italic; margin-bottom: 12px; }
-        .vocab-card .vc-audio-btn {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .vocab-card .vc-audio-btn:hover { background: #dbeafe; }
-        .vocab-card .vc-def { font-size: 15px; line-height: 1.6; margin-bottom: 12px; color: #334155; }
-        .vocab-card .vc-examples { margin-bottom: 15px; }
-        .vocab-card .vc-examples li { font-size: 14px; color: #475569; margin-bottom: 6px; padding-left: 10px; border-left: 2px solid #e2e8f0; list-style: none; }
-        .vocab-card .vc-translation-btn {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.2s;
-        }
-        .vocab-card .vc-translation-btn:hover { background: #e2e8f0; }
-        .vocab-card .vc-translation { display: none; margin-top: 12px; padding: 12px; background: #fefce8; border-radius: 8px; font-size: 15px; font-weight: 600; color: #854d0e; }
-        .vocab-card .vc-translation.show { display: block; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .ref-cards { grid-template-columns: 1fr; }
-            .matching-container { flex-direction: column; }
-            .chart-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 26px; }
-            .card { padding: 20px; }
-        }
-    </style>
+    
 <link rel="stylesheet" href="lesson.css">
 </head>
 <body>
     <div class="lesson-container">
         <!-- Navigation -->
         <div class="nav-bar">
-            <label class="section-picker">Section <select id="sectionSelect" aria-label="Go to lesson section"></select></label><span class="nav-title" id="navTitle">Screen 1 of 11</span>
+            <label class="section-picker">Section <select id="sectionSelect" aria-label="Go to lesson section"></select></label><span class="nav-title" id="navTitle">1 / 14</span>
             <div class="screen-indicator" id="screenDots" aria-label="Lesson sections"></div>
             <div class="nav-buttons">
                 <button class="nav-btn prev" id="prevBtn" onclick="prevScreen()">← Back</button>
@@ -654,25 +18,13 @@
             </div>
         </div>
 
-        <div class="tool-bar"><button type="button" onclick="openReference('grammar')">Grammar & prepositions</button><button type="button" onclick="openReference('vocab')">Word list</button><label><input type="checkbox" id="soundToggle"> Feedback sounds</label><span id="saveStatus" role="status"></span></div><!-- Screen 1: Introduction -->
+        <div class="tool-bar"><button type="button" onclick="openReference('grammar')">Grammar &amp; prepositions</button><button type="button" onclick="openReference('vocab')">Word list</button><label><input type="checkbox" id="soundToggle"> Feedback sounds</label><span id="saveStatus" role="status"></span></div><!-- Screen 1: Introduction -->
         <div class="screen active" id="screen1">
             <div class="card">
-                <span class="stage-label">Preparation step</span>
-                <div class="hero-image">
-                    <div class="scene">
-                        <div class="person">
-                            <div class="avatar suspect-av" aria-label="Person 1, in a casual jacket"><svg viewBox="0 0 100 120" aria-hidden="true"><circle cx="50" cy="32" r="21" fill="#efc4a4"/><path d="M28 30Q26 3 50 7Q78 5 73 32L63 22L35 22Z" fill="#302d32"/><path d="M12 120V83Q15 61 37 60L50 73L63 60Q86 62 88 83V120Z" fill="#9a6b4c"/><path d="M38 61L50 74L63 61L59 120H41Z" fill="#f4e9df"/></svg></div>
-                            <div class="label-tag suspect-tag">Person 1</div>
-                        </div>
-                        <div class="table-prop"></div>
-                        <div class="person">
-                            <div class="avatar detective-av" aria-label="Person 2, in a suit with a notebook"><svg viewBox="0 0 100 120" aria-hidden="true"><circle cx="50" cy="32" r="21" fill="#c6926b"/><path d="M28 28Q26 3 52 7Q75 7 73 28L64 18L31 23Z" fill="#222b36"/><path d="M9 120V84Q12 62 35 60L50 70L65 60Q88 64 91 84V120Z" fill="#253c59"/><path d="M37 61L50 71L64 61L52 109Z" fill="white"/><path d="M48 73H54L56 96L51 107L46 96Z" fill="#436e9a"/><rect x="62" y="86" width="25" height="30" rx="2" fill="#e7d9ae"/><path d="M66 93H82M66 100H82M66 107H78" stroke="#8a7654" stroke-width="2"/></svg></div>
-                            <div class="label-tag">Person 2</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="overview-box">
-                    <p>In this lesson, you'll learn how to talk about <strong>where people were</strong> in the past. You'll also learn the <span class="grammar-highlight">past simple of be (was/were)</span> and how to use <span class="grammar-highlight">prepositions in, on, at</span> with places and time expressions.</p>
+                <span class="stage-label">Welcome</span>
+                <p class="route-label">Overview · two lessons</p><figure class="welcome-banner"><img src="assets/images/welcome-detective.png" width="1536" height="1024" alt="A sunlit detective's desk with a notebook, pen and case folder, ready for a new investigation." fetchpriority="high"><figcaption><span>English File · Beginner · 10B</span><h1>Where was he?</h1><p>Welcome! Let’s solve the mystery.</p></figcaption></figure>
+                <div class="lesson-goals"><h3>By the end, I can…</h3><ul><li>ask where someone was yesterday;</li><li>answer with was / were and wasn’t / weren’t;</li><li>ask a follow-up question and report a partner’s answer.</li></ul></div><div class="lesson-route"><h3>Choose your route</h3><div class="route-grid"><div><h4>Lesson 1 · Ask about yesterday</h4><p>Warm-up → story → grammar → core practice → Kevin → place phrases → conversation model → role play → exit ticket.</p><p>Use sentences 1–5 and conversations 1–2 on screen 6. Leave the sections marked Extra practice for later.</p><button type="button" data-go-screen="2">Start lesson 1</button></div><div><h4>Lesson 2 · Consolidate and explore</h4><p>Return to the extra practice, then use Maisie’s video, new partner questions, role play round 2 and Buildings with a past.</p><p>Finish with the exit ticket again. Move on when you can ask and answer without reading.</p><button type="button" data-go-screen="9">Start with Maisie</button></div></div></div><details class="teacher-card"><summary>Teacher: suggested route</summary><p>Lesson 1 focuses on the core route; use only the conversation model and two partner questions in Sentence rhythm. On Lesson 2, revisit the extra practice from screens 6–7, add the Maisie video and the remaining partner prompts, swap roles, and use the hotel video. Assign Homework Part 1 after Lesson 1 and Part 2 after Lesson 2. Adjust the pace to the learner.</p></details><div class="overview-box">
+                    <p>In this lesson, you'll learn how to talk about <strong>where people were</strong> in the past. You'll also learn the <span class="grammar-highlight">past simple of be (was/were)</span> with useful place phrases such as <span class="grammar-highlight">at home, in bed, on a bus</span>.</p>
                 </div>
                 <div class="ref-cards">
                     <div class="ref-card" onclick="toggleRef('vocab')">
@@ -710,19 +62,19 @@
                 <div class="ref-section" id="grammarRef">
                     <h3>Past Simple of "be"</h3>
                     <table class="grammar-table">
-                        <tr><th>Subject</th><th>Positive (+)</th><th>Negative (−)</th><th>Question (?)</th></tr>
+                        <tbody><tr><th>Subject</th><th>Positive (+)</th><th>Negative (−)</th><th>Question (?)</th></tr>
                         <tr><td>I / he / she / it</td><td class="highlight">was</td><td>wasn't (was not)</td><td>Was I/he/she/it…?</td></tr>
                         <tr><td>you / we / they</td><td class="highlight">were</td><td>weren't (were not)</td><td>Were you/we/they…?</td></tr>
-                    </table>
+                    </tbody></table>
                     <div class="grammar-note">💡 <strong>am / is → was</strong>, <strong>are → were</strong>. He is at home today. → He was at home yesterday.</div>
 
                     <h3 style="margin-top: 20px;">Prepositions of Time: in, on, at</h3>
                     <table class="grammar-table">
-                        <tr><th>Preposition</th><th>Use</th><th>Examples</th></tr>
+                        <tbody><tr><th>Preposition</th><th>Use</th><th>Examples</th></tr>
                         <tr><td class="highlight">at</td><td>specific times</td><td>at 3 o'clock, at night, at the weekend</td></tr>
                         <tr><td class="highlight">on</td><td>days and dates</td><td>on Monday, on 5th March, on my birthday</td></tr>
                         <tr><td class="highlight">in</td><td>months, years, seasons, parts of the day</td><td>in July, in 2024, in the morning, in summer</td></tr>
-                    </table>
+                    </tbody></table>
 
                     <div class="past-time-box">
                         <h4>🕐 Past time expressions</h4>
@@ -737,98 +89,13 @@
             </div>
         </div>
 
-        <!-- Screen 2: Warm-up -->
-        <div class="screen" id="screen2">
-            <div class="card">
-                <span class="stage-label">Warm-up</span>
-                <h2>Where were you yesterday?</h2>
-                <div class="warmup-image" aria-label="Think about yesterday: morning, afternoon, evening"><span>08:00<br>Morning</span><span>14:00<br>Afternoon</span><span>20:00<br>Evening</span></div>
-                <p style="margin-bottom: 20px; color: #475569;">Think about yesterday. Discuss these questions with your teacher.</p>
-                <ul class="question-list">
-                    <li>Where were you <span class="clickable-word" onclick="showVocabCard('at')">at</span> 8 o'clock yesterday morning?</li>
-                    <li>What day was yesterday? Where were you <span class="clickable-word" onclick="showVocabCard('on')">on</span> that day?</li>
-                    <li>Were you at home <span class="clickable-word" onclick="showVocabCard('in')">in</span> the evening? Who were you with?</li>
-                    <li>Can you remember where you were <span class="clickable-word" onclick="showVocabCard('at')">at</span> the weekend?</li>
-                    <li>Were you <span class="clickable-word" onclick="showVocabCard('tired')">tired</span> yesterday? Why?</li>
-                </ul>
-                <div class="useful-lang">
-                    <h4>Useful language</h4>
-                    <ul>
-                        <li>I was at… / I was in…</li>
-                        <li>I wasn't at…</li>
-                        <li>Yes, I was. / No, I wasn't.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 3: Vocabulary Lead-in -->
-        <div class="screen" id="screen3">
-            <div class="card">
-                <span class="stage-label">Vocabulary</span>
-                <h2>Words in context</h2>
-                <div class="exercise-instruction">Read the sentences. Match the highlighted words to their correct meanings.</div>
-
-                <div style="background: #fefce8; padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #fde047;">
-                    <p style="margin-bottom: 12px; font-size: 15px; line-height: 1.7;">
-                        1. The <span class="clickable-word" onclick="showVocabCard('detective')">detective</span> looked for clues at the bank.
-                    </p>
-                    <p style="margin-bottom: 12px; font-size: 15px; line-height: 1.7;">
-                        2. The police had one <span class="clickable-word" onclick="showVocabCard('suspect')">suspect</span>: a man in a black coat.
-                    </p>
-                    <p style="margin-bottom: 12px; font-size: 15px; line-height: 1.7;">
-                        3. There was a <span class="clickable-word" onclick="showVocabCard('robbery')">robbery</span> at the bank yesterday.
-                    </p>
-                    <p style="margin-bottom: 12px; font-size: 15px; line-height: 1.7;">
-                        4. The suspect was in <span class="clickable-word" onclick="showVocabCard('prison')">prison</span> for two days.
-                    </p>
-                    <p style="font-size: 15px; line-height: 1.7;">
-                        5. They met at the <span class="clickable-word" onclick="showVocabCard('pub')">pub</span> at 7 o'clock.
-                    </p>
-                </div>
-
-                <div class="matching-container" id="vocabMatch">
-                    <div class="matching-col">
-                        <h4>Words</h4>
-                        <div class="match-item" data-word="detective" onclick="selectMatchItem(this, 'vocabMatch')">detective</div>
-                        <div class="match-item" data-word="suspect" onclick="selectMatchItem(this, 'vocabMatch')">suspect</div>
-                        <div class="match-item" data-word="robbery" onclick="selectMatchItem(this, 'vocabMatch')">robbery</div>
-                        <div class="match-item" data-word="prison" onclick="selectMatchItem(this, 'vocabMatch')">prison</div>
-                        <div class="match-item" data-word="pub" onclick="selectMatchItem(this, 'vocabMatch')">pub</div>
-                    </div>
-                    <div class="matching-col">
-                        <h4>Meanings</h4>
-                        <div class="drop-zone" data-answer="robbery" onclick="dropToZone(this, 'vocabMatch')">a crime when someone steals money or things</div>
-                        <div class="drop-zone" data-answer="detective" onclick="dropToZone(this, 'vocabMatch')">a person who tries to solve crimes</div>
-                        <div class="drop-zone" data-answer="suspect" onclick="dropToZone(this, 'vocabMatch')">a person who maybe did a crime</div>
-                        <div class="drop-zone" data-answer="prison" onclick="dropToZone(this, 'vocabMatch')">a place where criminals stay as punishment</div>
-                        <div class="drop-zone" data-answer="pub" onclick="dropToZone(this, 'vocabMatch')">a place where people go to drink and talk</div>
-                    </div>
-                </div>
-                <div class="result-summary" id="vocabMatchResult" style="display:none;"></div>
-                <button class="reset-btn" onclick="resetExercise('vocabMatch')">🔄 Reset</button>
-            </div>
-        </div>
-
-        <!-- Screen 4: Grammar Discovery - Illustration + 10.10 -->
-        <div class="screen" id="screen4">
-            <div class="card">
-                <span class="stage-label">Grammar</span>
-                <h2>Past simple: be</h2>
-
-                <figure class="interview-photo"><img src="assets/images/interview-realistic.png" alt="Two men seated across a table in an interview room. Person 1 is on the left; person 2 is on the right." width="1536" height="1024"><figcaption><span>1</span><span>2</span></figcaption></figure>
-<h3>a</h3>
-                <p style="font-size: 15px; line-height: 1.7; margin-bottom: 20px; color: #334155;">
-                    Last night there was a <span class="clickable-word" onclick="showVocabCard('robbery')">robbery</span> in a bank. Jason Brown is a <span class="clickable-word" onclick="showVocabCard('suspect')">suspect</span>. Look at the picture. Which person is Jason, and which person is a <span class="clickable-word" onclick="showVocabCard('detective')">detective</span>?
-                </p>
-
-                <h3>b</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.10', this)">Listen to the interview</button>
-                <div class="exercise-instruction">Listen to the interview and complete the gaps.</div>
-
-                <div class="dialogue-box" id="dialogueEx">
+        
+<section class="screen" id="screen2"><div class="card"><span class="stage-label">Warm-up</span><p class="route-label">Lesson 1 · core</p><h2>Now → yesterday</h2><div class="time-contrast"><div><span>NOW</span><p>Where <strong>are</strong> you?</p><p>I <strong>am</strong> at home.</p></div><div><span>YESTERDAY</span><p>Where <strong>were</strong> you?</p><p>I <strong>was</strong> at work.</p></div></div><p class="exercise-instruction">Listen to your teacher’s example. Then answer two questions. You can use the phrases below.</p><ul class="question-list"><li>Where are you now?</li><li>Where were you at eight o’clock yesterday morning?</li></ul><div class="phrase-bank">at home · at work · at school · in bed · in the kitchen</div><div class="oral-task"><h4>Say it with support</h4><p>I’m ___ now. Yesterday at eight, I was ___.</p><details class="teacher-card"><summary>Teacher notes</summary><p>Teacher: accept a short modelled answer here. Return to these questions after the speaking practice.</p></details></div></div></section>
+<section class="screen" id="screen3"><div class="card"><span class="stage-label">Story words</span><p class="route-label">Lesson 1 · core</p><h2>Before you listen</h2><p class="exercise-instruction">These four words help you understand the story. Match each word to its meaning. Open a word card if you need help.</p><div class="story-word-grid"><div><button class="word-link" onclick="showVocabCard('detective')">detective</button><p>He asks questions.</p><details class="lesson-notes"><summary>Russian meaning</summary><p lang="ru">детектив, сыщик</p></details></div><div><button class="word-link" onclick="showVocabCard('suspect')">suspect</button><p>The police ask him questions.</p><details class="lesson-notes"><summary>Russian meaning</summary><p lang="ru">подозреваемый</p></details></div><div><button class="word-link" onclick="showVocabCard('robbery')">robbery</button><p>There was a robbery at the bank.</p><details class="lesson-notes"><summary>Russian meaning</summary><p lang="ru">ограбление</p></details></div><div><button class="word-link" onclick="showVocabCard('alone')">alone</button><p>She was at home alone.</p><details class="lesson-notes"><summary>Russian meaning</summary><p lang="ru">один, без других людей</p></details></div></div><div class="matching-container exercise" id="vocabMatch"><div class="matching-col"><h4>Words</h4><div class="match-item" data-word="detective" onclick="selectMatchItem(this, 'vocabMatch')">detective</div><div class="match-item" data-word="suspect" onclick="selectMatchItem(this, 'vocabMatch')">suspect</div><div class="match-item" data-word="robbery" onclick="selectMatchItem(this, 'vocabMatch')">robbery</div><div class="match-item" data-word="alone" onclick="selectMatchItem(this, 'vocabMatch')">alone</div></div><div class="matching-col"><h4>Meanings</h4><div class="drop-zone" data-answer="robbery" onclick="dropToZone(this, 'vocabMatch')">Someone takes money from a bank or shop.</div><div class="drop-zone" data-answer="detective" onclick="dropToZone(this, 'vocabMatch')">A police officer who finds out what happened.</div><div class="drop-zone" data-answer="alone" onclick="dropToZone(this, 'vocabMatch')">With no other people.</div><div class="drop-zone" data-answer="suspect" onclick="dropToZone(this, 'vocabMatch')">The police think this person was part of a crime.</div></div></div><div class="result-summary" id="vocabMatchResult" hidden=""></div><button class="reset-btn" onclick="resetExercise('vocabMatch')">Reset matching</button><p class="exercise-hint">Use these words to follow the story. For speaking, focus on was / were and place phrases.</p></div></section>
+<section class="screen" id="screen4"><div class="card"><span class="stage-label">Listening</span><p class="route-label">Lesson 1 · core</p><h2>Jason’s story</h2><figure class="interview-photo"><img src="assets/images/interview-realistic.png" alt="Two men seated across a table in an interview room. Person 1 is on the left; person 2 is on the right." width="1536" height="1024"><figcaption><span>1</span><span>2</span></figcaption></figure>
+<p>Last night there was a robbery at a bank. Jason Brown is a suspect. Which person is Jason? Which person is the detective?</p><div class="mini-glossary"><button onclick="showVocabCard('pub')">pub</button><span>a place for drinks and conversation</span><button onclick="showVocabCard('wife')">wife</button><span>a woman who is married</span></div><h3>First listen: the story</h3><p class="exercise-instruction">Listen once without opening the dialogue. Does Jason change his story?</p><button class="audio-btn" data-audio-src="assets/audio/Efb_10.10.mp3" aria-label="Jason’s interview">Jason’s interview</button><div class="exercise" id="jasonGist"><div class="fill-sentence">Jason <select class="fill-input" data-answer="changes" style="width:260px"><option value="">Choose…</option><option value="same">keeps the same story</option><option value="changes">changes his story</option></select>.</div></div><div class="result-summary" id="jasonGistResult" hidden=""></div><details class="listening-task"><summary>Second listen: complete the dialogue</summary><p>Listen again. Complete the missing words. Compare answers, then check.</p><div class="dialogue-box" id="dialogueEx">
                     <div class="dialogue-line">
-                        <span class="speaker detective-sp">D</span> Where were you at <input type="text" class="fill-input" data-answer="ten" style="width:80px;"> o'clock last night?
+                        <span class="speaker detective-sp">D</span> Where were you at <input type="text" class="fill-input" data-answer="seven" style="width:80px;"> o'clock last night?
                     </div>
                     <div class="dialogue-line">
                         <span class="speaker jason-sp">J</span> I was at <input type="text" class="fill-input" data-answer="home" style="width:100px;">.
@@ -837,7 +104,7 @@
                         <span class="speaker detective-sp">D</span> You weren't at <input type="text" class="fill-input" data-answer="home" style="width:100px;">. Your <input type="text" class="fill-input" data-answer="wife" style="width:100px;"> says you were out. She was at home <span class="clickable-word" onclick="showVocabCard('alone')">alone</span>.
                     </div>
                     <div class="dialogue-line">
-                        <span class="speaker jason-sp">J</span> Oh yes, I remember now. I was in a <input type="text" class="fill-input" data-answer="meeting" style="width:120px;">.
+                        <span class="speaker jason-sp">J</span> Oh yes, I remember now. I was in a <input type="text" class="fill-input" data-answer="pub" style="width:120px;">.
                     </div>
                     <div class="dialogue-line">
                         <span class="speaker detective-sp">D</span> Were you <input type="text" class="fill-input" data-answer="alone" style="width:100px;">?
@@ -846,93 +113,9 @@
                         <span class="speaker jason-sp">J</span> No, I wasn't. I was with a <input type="text" class="fill-input" data-answer="friend" style="width:100px;">, Kevin Smith. You can ask him.
                     </div>
                 </div>
-                <div class="result-summary" id="dialogueExResult" style="display:none;"></div>
-                
-            </div>
-        </div>
-
-        <!-- Screen 5: Grammar Rules + Chart -->
-        <div class="screen" id="screen5">
-            <div class="card">
-                <span class="stage-label">Grammar</span>
-                <h2>Listen and repeat. Then read the rules.</h2>
-                <button class="audio-btn" onclick="playLessonAudio('10.11', this)"> Listen and repeat the examples</button>
-
-                <h3>Positive (+) and Negative (−)</h3>
-                <table class="grammar-table">
-                    <tr><th style="background:#dcfce7; color:#166534;">+</th><th style="background:#fef2f2; color:#991b1b;">−</th></tr>
-                    <tr><td class="green-cell"><strong>I was</strong> at home at eight o'clock.</td><td class="red-cell"><strong>I wasn't</strong> at home at eight o'clock. (wasn't = was not)</td></tr>
-                    <tr><td class="green-cell"><strong>You were</strong> in class yesterday.</td><td class="red-cell"><strong>You weren't</strong> in class yesterday. (weren't = were not)</td></tr>
-                    <tr><td class="green-cell"><strong>He was</strong> <span class="clickable-word" onclick="showVocabCard('tired')">tired</span> last night.</td><td class="red-cell"><strong>He wasn't</strong> tired last night.</td></tr>
-                    <tr><td class="green-cell"><strong>It was</strong> hot last week.</td><td class="red-cell"><strong>It wasn't</strong> hot last week.</td></tr>
-                    <tr><td class="green-cell"><strong>We were</strong> in London last month.</td><td class="red-cell"><strong>We weren't</strong> in London last month.</td></tr>
-                    <tr><td class="green-cell"><strong>You were</strong> late this morning.</td><td class="red-cell"><strong>You weren't</strong> late this morning.</td></tr>
-                    <tr><td class="green-cell"><strong>They were</strong> <span class="clickable-word" onclick="showVocabCard('famous')">famous</span> in the 60s.</td><td class="red-cell"><strong>They weren't</strong> famous in the 60s.</td></tr>
-                </table>
-
-                <h3 style="margin-top: 20px;">Questions (?) and Short answers</h3>
-                <table class="grammar-table">
-                    <tr><th style="background:#dbeafe; color:#1e40af;">?</th><th style="background:#dcfce7; color:#166534;">+</th><th style="background:#fef2f2; color:#991b1b;">−</th></tr>
-                    <tr><td><strong>Were you</strong> late?</td><td>Yes, <strong>I was</strong>.</td><td>No, <strong>I wasn't</strong>.</td></tr>
-                    <tr><td><strong>Was she</strong> a <span class="clickable-word" onclick="showVocabCard('singer')">singer</span>?</td><td>Yes, <strong>she was</strong>.</td><td>No, <strong>she wasn't</strong>.</td></tr>
-                    <tr><td><strong>Were they</strong> in Mexico last week?</td><td>Yes, <strong>they were</strong>.</td><td>No, <strong>they weren't</strong>.</td></tr>
-                </table>
-
-                <div class="grammar-note">
-                    💡 We use <strong>was / were</strong> to talk about the past.<br>
-                    💡 Present to past: <strong>am / is → was</strong>, <strong>are → were</strong><br>
-                    💡 The past of <em>there is</em> = <strong>there was</strong>, and the past of <em>there are</em> = <strong>there were</strong>.<br>
-                    <em>There was a party at the school last night.</em>
-                </div>
-
-                <h3 style="margin-top: 24px;">c — Complete the chart</h3>
-                <div class="exercise-instruction">Change the present sentences to the past.</div>
-                <div id="chartEx">
-                    <div class="fill-sentence">
-                        <strong>Present:</strong> I'm at home. → <strong>Past:</strong> I <input type="text" class="fill-input" data-answer="was" style="width:70px;"> at home.
-                    </div>
-                    <div class="fill-sentence">
-                        <strong>Present:</strong> You aren't at home. → <strong>Past:</strong> You <input type="text" class="fill-input" data-answer="weren't" style="width:90px;"> at home.
-                    </div>
-                    <div class="fill-sentence">
-                        <strong>Present:</strong> Are you alone? → <strong>Past:</strong> <input type="text" class="fill-input" data-answer="Were" style="width:80px;"> you alone?
-                    </div>
-                    <div class="fill-sentence">
-                        <strong>Present:</strong> No, I'm not. → <strong>Past:</strong> No, I <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;">.
-                    </div>
-                </div>
-                <div class="result-summary" id="chartExResult" style="display:none;"></div>
-                
-            </div>
-        </div>
-
-        <!-- Screen 6: Controlled Practice -->
-        <div class="screen" id="screen6">
-            <div class="card">
-                <span class="stage-label">Practice</span>
-                <h2>Write sentences and complete conversations</h2>
-
-                <h3>a — Write sentences or questions with was and were</h3>
-                <div class="exercise-instruction">Look at the symbols: <span class="symbol plus">+</span> positive, <span class="symbol minus">−</span> negative, <span class="symbol question">?</span> question</div>
-
-                <div id="practiceA">
-                    <div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">1</span><input type="text" class="fill-input" data-answer="Were you" style="width:140px;"> at school yesterday?</div>
-                    <div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">2</span>James <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;"> very well yesterday.</div>
-                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">3</span>We <input type="text" class="fill-input" data-answer="were" style="width:80px;"> on the plane at 4.00.</div>
-                    <div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">4</span><input type="text" class="fill-input" data-answer="Were they" style="width:160px;"> in class yesterday?</div>
-                    <div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">5</span>You <input type="text" class="fill-input" data-answer="weren't" style="width:90px;"> very hungry this morning.</div>
-                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">6</span>I <input type="text" class="fill-input" data-answer="was" style="width:70px;"> in a <span class="clickable-word" onclick="showVocabCard('meeting')">meeting</span> until 7.00 last night.</div>
-                    <div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">7</span><input type="text" class="fill-input" data-answer="Was your sister" style="width:200px;"> in London last week?</div>
-                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">8</span>It <input type="text" class="fill-input" data-answer="was" style="width:70px;"> a terrible <span class="clickable-word" onclick="showVocabCard('film')">film</span>.</div>
-                    <div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">9</span>I <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;"> at home last weekend.</div>
-                    <div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">10</span>Sarah and Emma <input type="text" class="fill-input" data-answer="were" style="width:80px;"> tired this morning.</div>
-                </div>
-                <div class="result-summary" id="practiceAResult" style="display:none;"></div>
-
-                <h3 style="margin-top: 24px;">b — Complete the conversations</h3>
-                <div class="exercise-instruction">Use <strong>was, wasn't, were</strong> or <strong>weren't</strong>.</div>
-
-                <div id="practiceB">
+                <div class="result-summary" id="dialogueExResult" hidden=""></div></details><div class="oral-task"><h4>Tell the story</h4><p>First, Jason says, “I was at ___.” Then he says, “I was in a ___.” Was he alone?</p></div></div></section>
+<section class="screen" id="screen5"><div class="card"><span class="stage-label">Grammar</span><p class="route-label">Lesson 1 · core</p><h2>Notice → practise</h2><p class="exercise-instruction">Compare three forms with the same subject. What changes in a negative sentence? What changes in a question?</p><div class="notice-lines"><p>You <strong>were</strong> at home.</p><p>You <strong>weren’t</strong> at home.</p><p><strong>Were you</strong> at home?</p></div><div class="exercise" id="noticeEx"><div class="fill-sentence">am / is → <select class="fill-input" data-answer="was" style="width:260px"><option value="">Choose…</option><option value="were">were</option><option value="was">was</option></select></div><div class="fill-sentence">are → <select class="fill-input" data-answer="were" style="width:260px"><option value="">Choose…</option><option value="were">were</option><option value="was">was</option></select></div><div class="fill-sentence">For a question, put was / were <select class="fill-input" data-answer="before" style="width:260px"><option value="">Choose…</option><option value="after">after the subject</option><option value="before">before the subject</option></select></div></div><div class="result-summary" id="noticeExResult" hidden=""></div><h3>Listen and repeat the examples</h3><button class="audio-btn" data-audio-src="assets/audio/Efb_10.11.mp3" aria-label="Grammar examples">Grammar examples</button><details class="lesson-notes"><summary>Open the grammar summary</summary><table class="grammar-table"><tbody><tr><th>Subject</th><th>Positive</th><th>Negative</th></tr><tr><td>I / he / she / it</td><td>was</td><td>wasn’t</td></tr><tr><td>you / we / they</td><td>were</td><td>weren’t</td></tr></tbody></table><p><strong>Question:</strong> Were you at home? / Was she tired?</p><p><strong>Short answer:</strong> Yes, I was. / No, she wasn’t.</p><p>Use <strong>yesterday, last night, last week</strong> without “the”.</p><p>In the story, “There was a robbery” means that a robbery happened.</p><details class="teacher-card"><summary>Teacher notes</summary><p>Treat “there was” as a phrase for understanding the story. Keep separate practice of there was / there were for another lesson.</p></details></details><h3>Change present to past</h3><div class="exercise" id="chartEx"><div class="fill-sentence">I’m at home. → I <input type="text" class="fill-input" data-answer="was" data-alternatives="[]" style="width:70px"> at home.</div><div class="fill-sentence">You aren’t at home. → You <input type="text" class="fill-input" data-answer="weren't" data-alternatives="[]" style="width:110px"> at home.</div><div class="fill-sentence">Are you alone? → <input type="text" class="fill-input" data-answer="Were" data-alternatives="[]" style="width:80px"> you alone?</div><div class="fill-sentence">No, I’m not. → No, I <input type="text" class="fill-input" data-answer="wasn't" data-alternatives="[]" style="width:100px">.</div></div><div class="result-summary" id="chartExResult" hidden=""></div></div></section>
+<section class="screen" id="screen6"><div class="card"><span class="stage-label">Practice</span><p class="route-label">Lesson 1 · core + extra practice</p><h2>Build sentences, then speak</h2><h3>Write complete sentences or questions</h3><p class="exercise-instruction">Use all the cues. <strong>+</strong> positive · <strong>−</strong> negative · <strong>?</strong> question. Example: she / at home / yesterday → She was at home yesterday.</p><div class="exercise" id="practiceA"><div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">1</span><span class="sentence-prompt">you / at school / yesterday</span><textarea class="fill-input full-response" data-answer="Were you at school yesterday?" data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">2</span><span class="sentence-prompt">James / not very well / yesterday</span><textarea class="fill-input full-response" data-answer="James wasn't very well yesterday." data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">3</span><span class="sentence-prompt">we / on the plane / at four</span><textarea class="fill-input full-response" data-answer="We were on the plane at four." data-alternatives="[&quot;We were on the plane at 4.00.&quot;,&quot;We were on the plane at 4.&quot;]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">4</span><span class="sentence-prompt">they / in class / yesterday</span><textarea class="fill-input full-response" data-answer="Were they in class yesterday?" data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">5</span><span class="sentence-prompt">you / not very hungry / this morning</span><textarea class="fill-input full-response" data-answer="You weren't very hungry this morning." data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><details class="extra-practice" data-extra-key="practice-a-extra"><summary>Extra practice: sentences 6–10</summary><div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">6</span><span class="sentence-prompt">I / in a meeting / until seven last night</span><textarea class="fill-input full-response" data-answer="I was in a meeting until seven last night." data-alternatives="[&quot;I was in a meeting until 7.00 last night.&quot;,&quot;I was in a meeting until 7 last night.&quot;]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol question" aria-label="question">?</span><span class="ex-num">7</span><span class="sentence-prompt">your sister / in London / last week</span><textarea class="fill-input full-response" data-answer="Was your sister in London last week?" data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">8</span><span class="sentence-prompt">it / a terrible film</span><textarea class="fill-input full-response" data-answer="It was a terrible film." data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol minus" aria-label="minus">−</span><span class="ex-num">9</span><span class="sentence-prompt">I / not at home / last weekend</span><textarea class="fill-input full-response" data-answer="I wasn't at home last weekend." data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="ex-row"><span class="symbol plus" aria-label="plus">+</span><span class="ex-num">10</span><span class="sentence-prompt">Sarah and Emma / tired / this morning</span><textarea class="fill-input full-response" data-answer="Sarah and Emma were tired this morning." data-alternatives="[]" style="width:680px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div></details></div><div class="result-summary" id="practiceAResult" hidden=""></div><h3>Complete the conversations</h3><p class="exercise-instruction">Use was, wasn’t, were or weren’t.</p><div id="practiceB">
                     <div class="conversation">
                         <div class="conv-num">1</div>
                         <div class="conv-line"><span class="speaker-a">A</span> Where were you last night?</div>
@@ -945,245 +128,56 @@
                         <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Was" style="width:60px;"> Freddie Mercury an <span class="clickable-word" onclick="showVocabCard('actor')">actor</span>?</div>
                         <div class="conv-line"><span class="speaker-b">B</span> No, he <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;">. He <input type="text" class="fill-input" data-answer="was" style="width:70px;"> a <span class="clickable-word" onclick="showVocabCard('singer')">singer</span> with Queen.</div>
                     </div>
-                    <div class="conversation">
+                    <details class="extra-practice" data-extra-key="practice-b-extra"><summary>Extra practice: conversations 3–4</summary><div class="conversation">
                         <div class="conv-num">3</div>
                         <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Were" style="width:70px;"> you in Milan yesterday?</div>
                         <div class="conv-line"><span class="speaker-b">B</span> No, we <input type="text" class="fill-input" data-answer="weren't" style="width:90px;">. We <input type="text" class="fill-input" data-answer="were" style="width:70px;"> in Rome.</div>
-                    </div>
-                    <div class="conversation">
+                    </div><div class="conversation">
                         <div class="conv-num">4</div>
                         <div class="conv-line"><span class="speaker-a">A</span> <input type="text" class="fill-input" data-answer="Was" style="width:60px;"> the <span class="clickable-word" onclick="showVocabCard('film')">film</span> good?</div>
                         <div class="conv-line"><span class="speaker-b">B</span> No, it <input type="text" class="fill-input" data-answer="wasn't" style="width:90px;">. It <input type="text" class="fill-input" data-answer="was" style="width:70px;"> very slow!</div>
-                    </div>
+                    </div></details>
+                    
                 </div>
-                <div class="result-summary" id="practiceBResult" style="display:none;"></div>
-                
-            </div>
-        </div>
-
-        <!-- Screen 7: Pronunciation + Listening 10.13 -->
-        <div class="screen" id="screen7">
-            <div class="card">
-                <span class="stage-label">Pronunciation & Listening</span>
-                <h2>Pronunciation & listening</h2>
-
-                <h3>Listen and say the sentences in the past</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.12', this)">Listen and repeat</button>
-
-                <div id="pronEx" style="background: #f0fdf4; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                    <div style="font-size: 15px; line-height: 2.2;">
-                        <div><strong>1.</strong> She's a teacher. → <em style="color:#166534;">She was a teacher.</em></div>
-                        <div><strong>2.</strong> They're at home. → <input type="text" class="fill-input" data-answer="They were at home." style="width:220px;"></div>
-                        <div><strong>3.</strong> He's tired. → <input type="text" class="fill-input" data-answer="He was tired." style="width:180px;"></div>
-                        <div><strong>4.</strong> We're in London. → <input type="text" class="fill-input" data-answer="We were in London." style="width:220px;"></div>
-                        <div><strong>5.</strong> I'm not hungry. → <input type="text" class="fill-input" data-answer="I wasn't hungry." style="width:200px;"></div>
-                    </div>
-                </div>
-                <div class="result-summary" id="pronExResult" style="display:none;"></div>
-
-                <h3 style="margin-top: 30px;">Listening</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.13', this)">Listen to the detective interviewing Kevin</button>
-                <div class="exercise-instruction">Listen and complete the information about Jason's <span class="clickable-word" onclick="showVocabCard('friend')">friend</span>, Kevin.</div>
-
-                <div class="info-card" id="kevinEx">
-                    <div class="info-row"><span class="info-label">Name:</span><span class="info-value">Kevin Smith</span></div>
-                    <div class="info-row"><span class="info-label">Job:</span><input type="text" class="fill-input" data-answer="teacher" style="width:150px;"></div>
-                    <div class="info-row"><span class="info-label">Address:</span><input type="text" class="fill-input" data-answer="15" style="width:60px;"> Market Street</div>
-                    <div class="info-sentence">Kevin knows Jason because they were <input type="text" class="fill-input" data-answer="at school" style="width:120px;"> together.</div>
-                    <div class="info-sentence">At 5.00 yesterday afternoon, he was in his <input type="text" class="fill-input" data-answer="car" style="width:100px;">.</div>
-                    <div class="info-sentence">At 7.00, he was in The <input type="text" class="fill-input" data-answer="Red Lion" style="width:120px;"> <span class="clickable-word" onclick="showVocabCard('pub')">pub</span> in South <input type="text" class="fill-input" data-answer="London" style="width:120px;">.</div>
-                    <div class="info-sentence">He was with Jason. His <input type="text" class="fill-input" data-answer="wife" style="width:100px;"> and <input type="text" class="fill-input" data-answer="children" style="width:120px;"> were there, too.</div>
-                </div>
-                <div class="result-summary" id="kevinExResult" style="display:none;"></div>
-
-                <div style="background: #fef2f2; border-left: 3px solid #ef4444; padding: 14px; border-radius: 0 8px 8px 0; margin-top: 16px;">
-                    <h4 style="color: #991b1b; font-size: 14px; margin-bottom: 6px;">b — Think about it</h4>
-                    <p style="font-size: 14px; color: #7f1d1d;">Why does the detective think that Kevin's story isn't true?</p>
-                </div>
-
-                
-            </div>
-        </div>
-
-        <!-- Screen 8: Vocabulary in/on/at -->
-        <div class="screen" id="screen8">
-            <div class="card">
-                <span class="stage-label">Vocabulary</span>
-                <h2>Places: in, on, at</h2>
-
-                <h3>a — Listen and check</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.14', this)">Listen and check</button>
-                <div class="exercise-instruction">The next day Jason and Kevin were in <span class="clickable-word" onclick="showVocabCard('prison')">prison</span>. But where was Jason's <span class="clickable-word" onclick="showVocabCard('wife')">wife</span>? Listen and complete the sentences.</div>
-
-                <div id="inatEx" style="background: #fefce8; padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #fde047; font-size: 15px; line-height: 2;">
-                    First she was on a <input type="text" class="fill-input" data-answer="plane" style="width:100px;">. Then she was in <input type="text" class="fill-input" data-answer="Boston" style="width:120px;">, in the <input type="text" class="fill-input" data-answer="bank" style="width:100px;">.
-                </div>
-                <div class="result-summary" id="inatExResult" style="display:none;"></div>
-
-                <h3 style="margin-top: 24px;">b — Places: read the chart</h3>
-                <div class="exercise-instruction">Where were you yesterday at 7.00 p.m.?</div>
-
-                <div class="chart-container">
-                    <div class="chart-grid">
-                        <div class="chart-col">
-                            <div class="chart-col-header in-h">in</div>
-                            <ul>
-                                <li>London</li><li>bed</li><li>the kitchen</li>
-                                <li>the car</li>
-                                <li>the park</li>
-                                <li>the street</li>
-                                <li>a restaurant</li>
-                                <li>a <span class="clickable-word" onclick="showVocabCard('pub')">pub</span></li>
-                                <li>a museum</li>
-                                <li>a <span class="clickable-word" onclick="showVocabCard('shopping centre')">shopping centre</span></li>
-                                <li>a hotel</li>
-                            </ul>
-                        </div>
-                        <div class="chart-col">
-                            <div class="chart-col-header on-h">on</div>
-                            <ul>
-                                <li>a bus</li>
-                                <li>a train</li>
-                                <li>a plane</li>
-                                <li>the <span class="clickable-word" onclick="showVocabCard('beach')">beach</span></li>
-                            </ul>
-                        </div>
-                        <div class="chart-col">
-                            <div class="chart-col-header at-h">at</div>
-                            <ul>
-                                <li>home</li>
-                                <li>work</li>
-                                <li>school</li>
-                                <li>university</li>
-                                
-                                
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 style="margin-top: 24px;">c — Listen and repeat</h3>
-                <button class="audio-btn" onclick="playLessonAudio('10.15', this)">Listen and check. Repeat the sentences.</button>
-
-                <div style="background: #f0fdf4; border-radius: 12px; padding: 20px; margin-top: 20px;">
-                    <h4 style="color: #166534; margin-bottom: 12px;">Quick practice</h4>
-                    <div id="inatPractice">
-                        <div class="fill-sentence">1. I was <input type="text" class="fill-input" data-answer="at" style="width:50px;"> home at 7.00.</div>
-                        <div class="fill-sentence">2. She was <input type="text" class="fill-input" data-answer="in" style="width:50px;"> the kitchen.</div>
-                        <div class="fill-sentence">3. They were <input type="text" class="fill-input" data-answer="on" style="width:50px;"> a bus.</div>
-                        <div class="fill-sentence">4. He was <input type="text" class="fill-input" data-answer="at" style="width:50px;"> work.</div>
-                        <div class="fill-sentence">5. We were <input type="text" class="fill-input" data-answer="in" style="width:50px;"> a restaurant.</div>
-                        <div class="fill-sentence">6. I was <input type="text" class="fill-input" data-answer="on" style="width:50px;"> the <span class="clickable-word" onclick="showVocabCard('beach')">beach</span>.</div>
-                    </div>
-                    <div class="result-summary" id="inatPracticeResult" style="display:none;"></div>
-                </div>
-                
-            </div>
-        </div>
-
-        <!-- Screen 9: Speaking -->
-        <div class="screen" id="screen9">
-            <div class="card">
-                <span class="stage-label">Speaking</span>
-                <h2>You are the detective!</h2>
-                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">There was a <span class="clickable-word" onclick="showVocabCard('robbery')">robbery</span> at a jewellery shop last Saturday at 7 o'clock in the evening. You are the <span class="clickable-word" onclick="showVocabCard('detective')">detective</span>. Ask your teacher (the <span class="clickable-word" onclick="showVocabCard('suspect')">suspect</span>) questions to find the truth.</p>
-
-                <details class="teacher-card"><summary>Teacher / partner: suspect role card</summary><p>Keep this card hidden from the detective. You are Alex. Your first story: at 7 p.m. you were at home, alone. Later, say that you were with Sam in a restaurant at 7 p.m. Let the detective notice the contradiction. Answer using was / were.</p><p>Swap roles for a second round: your partner invents a place, a time and one contradiction.</p></details><div class="speaking-prompts">
-                    <div class="speaking-prompt">
-                        <strong>Ask about:</strong><br>
-                        • Where the suspect was at 7 o'clock<br>
-                        • Who they were with<br>
-                        • Whether they were alone
-                    </div>
-                    <div class="speaking-prompt">
-                        <strong>Use these questions:</strong><br>
-                        • Where were you on Saturday evening?<br>
-                        • Were you at home at 7 o'clock?<br>
-                        • Who were you with?
-                    </div>
-                    <div class="speaking-prompt">
-                        <strong>Then decide:</strong><br>
-                        • Is the suspect telling the truth?<br>
-                        • Which two answers do not agree?
-                    </div>
-                </div>
-
-                <div class="useful-lang" style="margin-top: 24px;">
-                    <h4>Speaking support</h4>
-                    <ul>
-                        <li>Where were you at…? / on…?</li>
-                        <li>Were you at…? — Yes, I was. / No, I wasn't.</li>
-                        <li>Who were you with?</li>
-                        <li>I think your story is not true because…</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 10: Review -->
-        <div class="screen" id="screen10">
-            <div class="card">
-                <span class="stage-label">Review</span>
-                <h2>What can you remember?</h2>
-
-                <p class="exercise-instruction">Complete the review without opening the reference. Press Check when you are ready.</p><div id="reviewEx"></div><div id="reviewExResult" class="result-summary" hidden></div>
-
-                <div style="margin-top: 24px; padding: 20px; background: #eff6ff; border-radius: 12px;">
-                    <h4 style="color: #1e40af; margin-bottom: 10px;">💭 Reflect</h4>
-                    <ul style="list-style: none; font-size: 14px; color: #475569; line-height: 1.8;">
-                        <li>✓ Which new words can you remember?</li>
-                        <li>✓ Can you say where someone was in the past?</li>
-                        <li>✓ Do you know when to use in, on, and at?</li>
-                        <li>✓ Which activity was easiest for you?</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 11: Homework -->
-        <div class="screen" id="screen11">
-            <div class="card">
-                <div class="homework-section">
-                    <span class="stage-label">Homework</span>
-                    <h2 style="color: #92400e;">After the lesson</h2>
-
-                    <div class="homework-task">
-                        <h4>Task 1: Complete the sentences</h4>
-                        <p style="font-size: 14px; color: #475569; margin-bottom: 12px;">Write <strong>was</strong> or <strong>were</strong> and the correct preposition (<strong>in/on/at</strong>). In sentence 5, <strong>not</strong> is already provided.</p>
-                        <ol style="font-size: 14px; line-height: 2.2; padding-left: 20px;">
-                            <li>My brother ___ at school ___ Monday.</li>
-                            <li>The children ___ in the garden ___ the afternoon.</li>
-                            <li>Where ___ you ___ 9 o'clock last night?</li>
-                            <li>We ___ at the cinema ___ Saturday evening.</li>
-                            <li>She ___ not at home ___ the morning.</li>
-                        </ol>
-                    </div>
-
-                    <div class="homework-task">
-                        <h4>Task 2: Write about your weekend</h4>
-                        <p style="font-size: 14px; color: #475569; margin-bottom: 12px;">Write 5–8 sentences about where you were last weekend. Use <strong>was/were</strong> and <strong>in, on, at</strong>.</p>
-                        <p style="font-size: 13px; color: #64748b; font-style: italic;">Example: On Saturday morning, I was at the supermarket. At 2 o'clock, I was at home…</p>
-                        <ul class="checklist">
-                            <li>Use was/were at least 5 times</li>
-                            <li>Use in, on, at correctly</li>
-                            <li>Write about different times (morning, afternoon, evening)</li>
-                            <li>Check your spelling</li>
-                        </ul>
-                    </div>
-
-                    <div class="homework-task">
-                        <h4>Task 3: Vocabulary review</h4>
-                        <p style="font-size: 14px; color: #475569;">Write one sentence for each word: <strong>detective</strong>, <strong>suspect</strong>, <strong>robbery</strong>, <strong>prison</strong>, <strong>pub</strong>. Make your own sentences!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Vocabulary Support Card Overlay -->
+                <div class="result-summary" id="practiceBResult" hidden=""></div><div class="oral-task"><h4>Close the text. Say it again.</h4><p>Choose one conversation and act it out. Then change one place or one name and repeat it.</p><details class="teacher-card"><summary>Teacher notes</summary><p>Teacher cue: “you / at home / yesterday?” → student asks a full question. Partner answers.</p></details></div></div></section>
+<section class="screen" id="screen7"><div class="card"><span class="stage-label">Say it &amp; listen</span><p class="route-label">Lesson 1 · Kevin + optional drill</p><h2>The past — and Kevin’s story</h2><details class="extra-practice" data-extra-key="past-pronunciation"><summary>Extra practice: say the sentences in the past</summary><h3>Listen and say the sentences in the past</h3><p class="exercise-instruction">Listen to a present sentence. Pause at the sound, say the past form, then play the model answer. Write your answers afterwards.</p><button class="audio-btn" data-audio-src="assets/audio/Efb_10.12.mp3" aria-label="Say the sentences in the past">Say the sentences in the past</button><p class="worked-example">She’s a teacher. → <strong>She was a teacher.</strong></p><div class="exercise" id="pronEx"><div class="fill-sentence"><span class="item-number">2.</span> Is he an actor? → <input type="text" class="fill-input" data-answer="Was he an actor?" data-alternatives="[]" style="width:400px"></div><div class="fill-sentence"><span class="item-number">3.</span> We aren’t very happy. → <textarea class="fill-input full-response" data-answer="We weren't very happy." data-alternatives="[]" style="width:400px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="fill-sentence"><span class="item-number">4.</span> It isn’t expensive. → <input type="text" class="fill-input" data-answer="It wasn't expensive." data-alternatives="[]" style="width:400px"></div><div class="fill-sentence"><span class="item-number">5.</span> They’re terrible. → <input type="text" class="fill-input" data-answer="They were terrible." data-alternatives="[]" style="width:400px"></div><div class="fill-sentence"><span class="item-number">6.</span> Are you a student? → <input type="text" class="fill-input" data-answer="Were you a student?" data-alternatives="[]" style="width:400px"></div><div class="fill-sentence"><span class="item-number">7.</span> I’m not tired. → <input type="text" class="fill-input" data-answer="I wasn't tired." data-alternatives="[]" style="width:400px"></div><div class="fill-sentence"><span class="item-number">8.</span> You’re in my class. → <input type="text" class="fill-input" data-answer="You were in my class." data-alternatives="[]" style="width:400px"></div></div><div class="result-summary" id="pronExResult" hidden=""></div></details><h3>First listen: where was Kevin?</h3><p>Kevin is Jason’s friend. Listen once for the place at seven o’clock.</p><button class="audio-btn" data-audio-src="assets/audio/Efb_10.13.mp3" aria-label="Kevin’s interview">Kevin’s interview</button><div class="exercise" id="kevinGist"><div class="fill-sentence">At seven, Kevin says he was <select class="fill-input" data-answer="pub" style="width:260px"><option value="">Choose…</option><option value="home">at home</option><option value="bank">at a bank</option><option value="pub">in a pub</option></select>.</div></div><div class="result-summary" id="kevinGistResult" hidden=""></div><details class="listening-task"><summary>Second listen: complete Kevin’s information</summary><p>Read the information first. Listen again and fill the gaps.</p><div class="info-card exercise" id="kevinEx"><div class="info-row"><span class="info-label">Name:</span>Kevin Smith</div><div class="info-row"><span class="info-label">Job:</span><input type="text" class="fill-input" data-answer="taxi driver" data-alternatives="[&quot;a taxi driver&quot;]" style="width:180px"></div><div class="info-row"><span class="info-label">Address:</span><input type="text" class="fill-input" data-answer="14" data-alternatives="[&quot;fourteen&quot;]" style="width:70px"> Market Street</div><div class="info-sentence">Kevin and Jason were <input type="text" class="fill-input" data-answer="at school" data-alternatives="[]" style="width:140px"> together.</div><div class="info-sentence">At five yesterday afternoon, Kevin was in his <input type="text" class="fill-input" data-answer="taxi" data-alternatives="[]" style="width:100px">.</div><div class="info-sentence">At seven, he was in The <input type="text" class="fill-input" data-answer="Black Horse" data-alternatives="[]" style="width:170px"> pub in South <input type="text" class="fill-input" data-answer="Street" data-alternatives="[]" style="width:110px">.</div><div class="info-sentence">He says Jason was there. His <input type="text" class="fill-input" data-answer="wife" data-alternatives="[]" style="width:100px"> and <input type="text" class="fill-input" data-answer="Jason's wife" data-alternatives="[]" style="width:170px"> were there, too.</div></div><div class="result-summary" id="kevinExResult" hidden=""></div></details><div class="oral-task"><h4>Find the contradiction</h4><p>Which detail in Kevin’s story is difficult to believe? Compare his answer with what the detective said earlier. Explain your idea before opening a hint.</p><label class="open-response">My evidence<textarea class="writing-area" data-note-key="story-evidence" placeholder="Kevin says …, but …"></textarea></label><details class="story-hint"><summary>Hint 1: which person?</summary><p>Think about Jason’s wife. Where does each speaker say she was?</p></details><details class="story-hint"><summary>Hint 2: compare the statements</summary><p>The detective says Jason’s wife was at home alone. Kevin says she was with them. Where was she?</p><div class="exercise" id="storyCheck"><div class="fill-sentence">These two statements <select class="fill-input" data-answer="disagree" style="width:260px"><option value="">Choose…</option><option value="agree">agree</option><option value="disagree">do not agree</option></select>.</div></div><div class="result-summary" id="storyCheckResult" hidden=""></div></details><details class="lesson-notes story-explanation"><summary>Explanation — after discussing</summary><p>The detective’s information and Kevin’s claim about Jason’s wife do not agree. Kevin puts her in the pub with them; the detective says she was at home alone.</p></details></div><details class="lesson-notes"><summary>Interview transcript — after listening</summary><p><b>D:</b> Interview with Kevin Smith at eight p.m. on Tuesday the fourteenth of November. Are you Kevin Smith?</p><p><b>K:</b> Yes, I am.</p><p><b>D:</b> What do you do, Kevin?</p><p><b>K:</b> I’m a taxi driver.</p><p><b>D:</b> And where do you live?</p><p><b>K:</b> At fourteen Market Street.</p><p><b>D:</b> Do you know the suspect, Jason Brown?</p><p><b>K:</b> Yes, I know him. He’s my friend. We were at school together.</p><p><b>D:</b> Where were you yesterday afternoon at five o’clock?</p><p><b>K:</b> Yesterday at five o’clock… I was in my taxi. I was in my taxi all afternoon.</p><p><b>D:</b> And at seven o’clock? Where were you then?</p><p><b>K:</b> I was in a pub. The Black Horse.</p><p><b>D:</b> Where is it, exactly?</p><p><b>K:</b> In South Street. Near the station.</p><p><b>D:</b> Were you alone?</p><p><b>K:</b> No, I was with Jason.</p><p><b>D:</b> Were you only with Jason?</p><p><b>K:</b> Er, no. My wife was there. And Jason’s wife.</p><p><b>D:</b> Jason’s wife? She was with you?</p><p><b>K:</b> Er, yes.</p><p><b>D:</b> Are you sure?</p></details></div></section>
+<section class="screen" id="screen8"><div class="card"><span class="stage-label">Places</span><p class="route-label">Lesson 1 · core</p><h2>Useful phrases: in, on, at</h2><div class="mini-glossary"><button onclick="showVocabCard('prison')">prison</button><span>a place where people are kept after a crime</span><span><strong>bar</strong> — a place for drinks</span></div><h3>Listen to the sounds: where was she?</h3><p class="exercise-instruction">The next day Jason and Kevin were in prison. Where was Jason’s wife? Listen to the sound clues.</p><button class="audio-btn" data-audio-src="assets/audio/Efb_10.14.mp3" aria-label="Where was Jason’s wife?">Where was Jason’s wife?</button><div class="exercise" id="inatEx"><div class="fill-sentence">First she was on a <input type="text" class="fill-input" data-answer="plane" data-alternatives="[]" style="width:100px">. Then she was in <input type="text" class="fill-input" data-answer="Benidorm" data-alternatives="[]" style="width:140px">, in a <input type="text" class="fill-input" data-answer="bar" data-alternatives="[]" style="width:100px">.</div></div><div class="result-summary" id="inatExResult" hidden=""></div><h3>Learn places in phrases</h3><div class="place-cards"><div><h4>at</h4><p>at home<br>at work<br>at school<br>at university</p></div><div><h4>in</h4><p>in London<br>in bed<br>in the kitchen<br>in a car</p></div><div><h4>on</h4><p>on a bus<br>on a train<br>on a plane</p></div></div><p class="exercise-hint">We can say <strong>in a restaurant</strong> or <strong>at a restaurant</strong>, depending on the meaning. Both can answer “Where were you?”</p><h3>Listen and repeat the place phrases</h3><button class="audio-btn" data-audio-src="assets/audio/Efb_10.15.mp3" aria-label="Place phrases">Place phrases</button><div class="exercise" id="inatPractice"><div class="fill-sentence"><span class="item-number">1.</span> I was <input type="text" class="fill-input" data-answer="at" data-alternatives="[]" style="width:60px"> home at seven.</div><div class="fill-sentence"><span class="item-number">2.</span> She was <input type="text" class="fill-input" data-answer="in" data-alternatives="[]" style="width:60px"> the kitchen.</div><div class="fill-sentence"><span class="item-number">3.</span> They were <input type="text" class="fill-input" data-answer="on" data-alternatives="[]" style="width:60px"> a bus.</div><div class="fill-sentence"><span class="item-number">4.</span> He was <input type="text" class="fill-input" data-answer="at" data-alternatives="[]" style="width:60px"> work.</div><div class="fill-sentence"><span class="item-number">5.</span> We were <input type="text" class="fill-input" data-answer="in" data-alternatives="[&quot;at&quot;]" style="width:60px"> a restaurant.</div><div class="fill-sentence"><span class="item-number">6.</span> I was <input type="text" class="fill-input" data-answer="on" data-alternatives="[]" style="width:60px"> the beach.</div></div><div class="result-summary" id="inatPracticeResult" hidden=""></div><details class="lesson-notes"><summary>Time phrases — a separate reminder</summary><p><strong>at</strong> seven · <strong>on</strong> Monday · <strong>in</strong> the morning</p><p>Say two true sentences: “Yesterday at seven, I was ___.” / “On Saturday, I was ___.”</p></details><button class="route-shortcut" type="button" data-go-screen="10">Lesson 1: continue to the conversation model</button></div></section>
+<section class="screen" id="screen9"><div class="card"><span class="stage-label">Video &amp; speaking</span><p class="route-label">Lesson 2 · consolidation</p><h2>Where was Maisie?</h2><p class="exercise-instruction">Maisie took photos of the places she was yesterday. Watch and pause when a small circle appears. Guess the place before the picture is complete.</p><div class="video-panel"><video controls="" playsinline="" preload="metadata" aria-label="Maisie’s day: in, on, at" src="assets/video/efb_10b_vocabulary.mp4"></video><p class="media-error" hidden="">Video unavailable. Keep the assets folder beside the lesson.</p><label>Playback speed <select class="media-speed"><option value="0.75">0.75×</option><option value="1" selected="">1×</option><option value="1.25">1.25×</option></select></label></div><div class="phrase-bank">at home · in a park · on a train · in bed · in a restaurant / café · at university · in the street · on a bus · in a shopping centre</div><div class="exercise" id="maisieEx"><div class="fill-sentence"><span class="item-number">1.</span> She was <input type="text" class="fill-input" data-answer="on a bus" data-alternatives="[]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">2.</span> She was <input type="text" class="fill-input" data-answer="in the street" data-alternatives="[&quot;on the street&quot;]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">3.</span> She was <input type="text" class="fill-input" data-answer="at university" data-alternatives="[]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">4.</span> She was <input type="text" class="fill-input" data-answer="in a restaurant" data-alternatives="[&quot;in a café&quot;,&quot;in a cafe&quot;,&quot;at a restaurant&quot;,&quot;at a café&quot;,&quot;at a cafe&quot;]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">5.</span> She was <input type="text" class="fill-input" data-answer="in a park" data-alternatives="[&quot;at a park&quot;]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">6.</span> She was <input type="text" class="fill-input" data-answer="in a shopping centre" data-alternatives="[&quot;at a shopping centre&quot;]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">7.</span> She was <input type="text" class="fill-input" data-answer="on a train" data-alternatives="[]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">8.</span> She was <input type="text" class="fill-input" data-answer="at home" data-alternatives="[]" style="width:300px">.</div><div class="fill-sentence"><span class="item-number">9.</span> She was <input type="text" class="fill-input" data-answer="in bed" data-alternatives="[]" style="width:300px">.</div></div><div class="result-summary" id="maisieExResult" hidden=""></div><div class="oral-task"><h4>Ask, answer, then report</h4><p>Partner A chooses a picture number. Partner B answers: “Where was she?” — “She was ___.” Swap roles.</p><p>Close the answers. Remember three places and say them aloud.</p></div><details class="teacher-card"><summary>Teacher: how to use the video</summary><p>Pause at each circle, starting around ten seconds. Elicit a full sentence with the right preposition, then continue to check. At the final grid, pause and use it for pair questions. Use the end of this particular file rather than a timestamp from another edition.</p></details></div></section>
+<section class="screen" id="screen10"><div class="card"><span class="stage-label">Pronunciation &amp; speaking</span><p class="route-label">Lesson 1 model · Lesson 2 partner practice</p><h2>Was / were: sentence rhythm</h2><h3>Listen and repeat the conversation. Copy the rhythm.</h3><p>Listen once. Then pause after each line and repeat. The bold words carry the main beats.</p><button class="audio-btn" data-audio-src="assets/audio/Efb_10.16.mp3" aria-label="Conversation rhythm">Conversation rhythm</button><div class="rhythm-dialogue"><p><span class="speaker">A</span><span><strong>Where</strong> were you at <strong>seven o’clock yesterday morning</strong>?</span></p><p><span class="speaker">B</span><span>I was at <strong>home</strong>.</span></p><p><span class="speaker">A</span><span>Were you in <strong>bed</strong>?</span></p><p><span class="speaker">B</span><span><strong>Yes, I was.</strong></span></p><p><span class="speaker">A</span><span><strong>Where</strong> were you at <strong>ten o’clock</strong>?</span></p><p><span class="speaker">B</span><span>I was in a <strong>café</strong> with <strong>friends</strong>.</span></p><p><span class="speaker">A</span><span>Were you there all <strong>morning</strong>?</span></p><p><span class="speaker">B</span><span><strong>No, we weren’t.</strong> We were there for an <strong>hour</strong>.</span></p></div><h3>Ask and answer with a partner</h3><p class="exercise-instruction">Partner A uses the green prompts; partner B uses the blue prompts. Answer about your real day. Practise making each question first, then ask without reading.</p><div class="partner-head"><span>Partner A</span><span>Partner B</span></div><div class="partner-row"><span class="item-number">1.</span><span>Where were you yesterday at</span><div class="time-options"><span class="time-a">7.00</span><span class="time-b">10.00</span></div><span>in the morning?</span></div><div class="partner-row"><span class="item-number">2.</span><span>Where were you yesterday at</span><div class="time-options"><span class="time-a">4.00</span><span class="time-b">6.30</span></div><span>in the afternoon?</span></div><div class="partner-row"><span class="item-number">3.</span><span>Where were you at</span><div class="time-options"><span class="time-a">10.00</span><span class="time-b">11.30</span></div><span>last night?</span></div><div class="partner-row"><span class="item-number">4.</span><span>Where were you last</span><div class="time-options"><span class="time-a">Friday</span><span class="time-b">Saturday</span></div><span>night?</span></div><div class="oral-task"><h4>Keep the conversation going</h4><p>Were you alone? · Who were you with? · Were you there all morning?</p><p>Now tell the class two things about your partner: “At seven yesterday morning, Alex was ___.”</p></div><label class="open-response">Two things about my partner<textarea class="writing-area" data-note-key="partner-report" placeholder="At seven yesterday morning, …"></textarea></label><details class="teacher-card"><summary>Teacher: strong and weak forms</summary><p>In positive sentences, unstressed <strong>was</strong> is often /wəz/ and <strong>were</strong> is often /wə/. In short answers use strong /wɒz/ and /wɜː/: “Yes, I was.” Negatives are stressed: “No, we weren’t.” Yes/no questions can also use a strong form.</p><p>First play the whole conversation for meaning. Replay line by line for repetition. Model the first two partner questions. After pair work, ask learners to report one sentence about their partner. Focus on clear stress and intelligibility; don’t score pronunciation automatically.</p></details></div></section>
+<section class="screen" id="screen11"><div class="card"><span class="stage-label">Speaking</span><p class="route-label">Lesson 1 round 1 · Lesson 2 round 2</p><h2>You are the detective!</h2><p>There was a robbery at a jewellery shop last Saturday at seven in the evening. Ask the suspect about that time.</p><h3>Round 1 — with support</h3><div class="question-support"><p>Where were you at seven?</p><p>Were you alone?</p><p>Who were you with?</p><p>Were you at home at seven?</p></div><details class="teacher-card"><summary>Suspect only: role card A</summary><p>You are Alex. At six you were at home alone. At seven you were in a café with Sam. First say: “At seven I was at home alone.” When asked again about the time or your friend, say: “At seven I was in a café with Sam.” Don’t show this card to the detective.</p></details><p>Detective: ask at least four questions. Ask about the same time again. Which answers do not agree?</p><h3>Round 2 — swap roles</h3><p>Use fewer prompts. Prepare a new place, time and person. Include one contradiction about the same time. Your partner must find it.</p><details class="teacher-card"><summary>Suspect only: role card B</summary><p>You are Jordan. At eight you were on a train with Lee. First say you were at the cinema alone at eight. Later say you were on a train with Lee at eight. Answer other questions simply; let the detective notice the contradiction.</p></details><div class="oral-task"><h4>Give your conclusion</h4><p>“First you said ___, but then you said ___.”</p><details class="teacher-card"><summary>Teacher notes</summary><p>Teacher: give feedback on the message first, then one useful correction. Repeat the corrected question or answer once.</p></details></div><div class="oral-checklist"><label><input type="checkbox" data-check-key="role-four"> I asked four questions.</label><label><input type="checkbox" data-check-key="role-followup"> I asked a follow-up question.</label><label><input type="checkbox" data-check-key="role-contradiction"> I explained the contradiction.</label></div><button class="route-shortcut" type="button" data-go-screen="13">Lesson 1: continue to the exit ticket</button></div></section>
+<section class="screen" id="screen12"><div class="card"><span class="stage-label">Video listening</span><p class="route-label">Lesson 2 · video extension</p><h2>Buildings with a past</h2><p class="exercise-instruction">First watch: where are the buildings? What are they today? What were they in 1808?</p><div class="mini-glossary"><span><strong>cellar</strong> /ˈselə/ — an underground part of a house</span><span><strong>vault</strong> /vɔːlt/ — a strong room for keeping money</span></div><div class="video-panel"><video controls="" playsinline="" preload="metadata" aria-label="Buildings with a past: the Old Bank Hotel" src="assets/video/efb_10b_listening.mp4"></video><p class="media-error" hidden="">Video unavailable. Keep the assets folder beside the lesson.</p><label>Playback speed <select class="media-speed"><option value="0.75">0.75×</option><option value="1" selected="">1×</option><option value="1.25">1.25×</option></select></label></div><div class="exercise" id="hotelGist"><div class="fill-sentence">The buildings are in <select class="fill-input" data-answer="Oxford" style="width:260px"><option value="">Choose…</option><option value="London">London</option><option value="Oxford">Oxford</option><option value="Cambridge">Cambridge</option></select>.</div><div class="fill-sentence">Today they are <select class="fill-input" data-answer="a hotel" style="width:260px"><option value="">Choose…</option><option value="shops">shops</option><option value="a hotel">a hotel</option><option value="a bank">a bank</option></select>.</div><div class="fill-sentence">In 1808 they were <select class="fill-input" data-answer="a bank" style="width:260px"><option value="">Choose…</option><option value="a school">a school</option><option value="a hotel">a hotel</option><option value="a bank">a bank</option></select>.</div></div><div class="result-summary" id="hotelGistResult" hidden=""></div><h3>Watch again: the details</h3><p>Complete each sentence with one word from the list. Use each word once.</p><div class="phrase-bank">bank · bedrooms · centre · doors · money · restaurant · rooms · shops · wine</div><div class="exercise" id="hotelEx"><div class="fill-sentence"><span class="item-number">1.</span> The Old Bank Hotel is in the <input type="text" class="fill-input" data-answer="centre" data-alternatives="[]" style="width:160px"> of Oxford.</div><div class="fill-sentence"><span class="item-number">2.</span> In the eighteenth century, the buildings were <input type="text" class="fill-input" data-answer="shops" data-alternatives="[]" style="width:160px">.</div><div class="fill-sentence"><span class="item-number">3.</span> The buildings were a <input type="text" class="fill-input" data-answer="bank" data-alternatives="[]" style="width:160px"> for about two hundred years.</div><div class="fill-sentence"><span class="item-number">4.</span> The hotel has a fantastic <input type="text" class="fill-input" data-answer="restaurant" data-alternatives="[]" style="width:160px">.</div><div class="fill-sentence"><span class="item-number">5.</span> There are forty-two <input type="text" class="fill-input" data-answer="bedrooms" data-alternatives="[]" style="width:160px">.</div><div class="fill-sentence"><span class="item-number">6.</span> The secret <input type="text" class="fill-input" data-answer="rooms" data-alternatives="[]" style="width:160px"> are under the hotel.</div><div class="fill-sentence"><span class="item-number">7.</span> They were for keeping <input type="text" class="fill-input" data-answer="money" data-alternatives="[]" style="width:160px">.</div><div class="fill-sentence"><span class="item-number">8.</span> The <input type="text" class="fill-input" data-answer="doors" data-alternatives="[]" style="width:160px"> were very difficult to open.</div><div class="fill-sentence"><span class="item-number">9.</span> Today the hotel keeps <input type="text" class="fill-input" data-answer="wine" data-alternatives="[]" style="width:160px"> in these rooms.</div></div><div class="result-summary" id="hotelExResult" hidden=""></div><div class="oral-task"><h4>Would you like to stay here?</h4><p>Would you like to stay at the hotel? Why / why not?</p><p>Yes, because ___ . / No, because ___ .</p><p>Finish: “Today it is ___, but in 1808 it was ___.”</p></div><label class="open-response">My answer<textarea class="writing-area" data-note-key="hotel-opinion" placeholder="I would / wouldn’t like to stay there because …"></textarea></label><details class="lesson-notes"><summary>Video transcript — after the tasks</summary><div class="transcript"><p>Hi! I’m Greg. Welcome to Oxford. I’m visiting the Old Bank Hotel. It’s 
+ an unusual hotel in the centre of the city.
+ The Old Bank is in the High Street, in the centre of Oxford. Today it’s 
+ a luxury hotel, but these buildings – from number ninety-two to 
+ number ninety-four – have a very interesting history.
+ In the sixteenth century, they were part of Christ Church College. 
+ In the eighteenth century, they were different shops. And we know 
+ that in eighteen-oh-eight the buildings were one business – a bank.
+ There was a bank here for almost two hundred years, but today it’s a 
+ famous Oxford hotel. Would you like to go in and look? Let’s go.
+ The Old Bank Hotel has a beautiful reception and a fantastic 
+ restaurant.
+ There are forty-two bedrooms and they’re all very comfortable. They 
+ have great views of Oxford’s famous colleges.
+ This room has a large bed, two chairs, a table, a television, and a 
+ cupboard. It has a beautiful marble bathroom, too.
+ But there are other rooms that visitors to the hotel don’t usually see. 
+ These secret rooms are here in the cellar, under the hotel. These are 
+ the old bank vaults. When the hotel was a bank, all the money was 
+ here. The rooms were small and the doors weren’t easy to open! 
+ They were very, very strong, and on each one, there was a large lock. 
+ Today, these old vaults are storerooms. The hotel keeps its wine 
+ collection in here, so it’s very, very safe! Ninety-two to ninety-four 
+ High Street is a part of Oxford’s history. And today, if you want to 
+ visit Oxford, the Old Bank is a fantastic place to see!
+ </p></div></details><details class="teacher-card"><summary>Teacher: extension or second lesson</summary><p>Model cellar and vault before watching. Play the film once all the way through for the three general questions. Let learners read the word list and nine sentences before the second viewing. For extra support, use the transcript only after an attempt. End with an opinion and an is / was sentence.</p></details></div></section>
+<section class="screen" id="screen13"><div class="card"><span class="stage-label">Review</span><p class="route-label">Finish either lesson</p><h2>What can you do now?</h2><p class="exercise-instruction">Try these without opening the reference. Then complete the speaking exit ticket with your teacher.</p><div class="exercise" id="reviewEx"><div class="fill-sentence">? Make a question: you / at home / yesterday → <textarea class="fill-input full-response" data-answer="Were you at home yesterday?" data-alternatives="[]" style="width:480px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="fill-sentence">Negative: She was at work. → <input type="text" class="fill-input" data-answer="She wasn't at work." data-alternatives="[]" style="width:480px"></div><div class="fill-sentence">Were they at school? (yes) → <input type="text" class="fill-input" data-answer="Yes, they were." data-alternatives="[]" style="width:300px"></div><div class="fill-sentence">Were you tired? (no) → <input type="text" class="fill-input" data-answer="No, I wasn't." data-alternatives="[&quot;No, we weren’t.&quot;]" style="width:300px"></div><div class="fill-sentence">He was <input type="text" class="fill-input" data-answer="in" data-alternatives="[]" style="width:60px"> bed. They were <input type="text" class="fill-input" data-answer="on" data-alternatives="[]" style="width:60px"> a train.</div></div><div class="result-summary" id="reviewExResult" hidden=""></div><div class="oral-task"><h4>Speaking exit ticket</h4><ol><li>Say two true sentences about yesterday.</li><li>Ask your teacher one real question about yesterday.</li><li>Listen to the answer and ask one follow-up question.</li></ol></div><div class="oral-checklist"><label><input type="checkbox" data-check-key="exit-questions"> I can ask where someone was.</label><label><input type="checkbox" data-check-key="exit-answers"> I can answer with was / were and negatives.</label><label><input type="checkbox" data-check-key="exit-report"> I can report where another person was.</label></div><label class="open-response">One thing to practise next<textarea class="writing-area" data-note-key="exit-reflection" placeholder="I want more practice with …"></textarea></label></div></section>
+<section class="screen" id="screen14"><div class="card"><span class="stage-label">Homework</span><p class="route-label">Homework · two parts</p><h2>After the lesson</h2><p class="exercise-instruction">Complete Part 1 after the first lesson and Part 2 after the second. Keep your own answers in the fields; open model answers only after an attempt. Your work is saved on this device.</p><section class="homework-part" id="homework-part-1"><h3>Part 1 · after Lesson 1</h3><p>Past sentences, short conversations and pronunciation. Try the tasks before opening the answers.</p><nav class="homework-links" aria-label="Part 1 · after Lesson 1 sections"><a href="#hw-section-past" data-open-homework="hw-section-past">Past sentences</a><a href="#hw-section-conversations" data-open-homework="hw-section-conversations">Conversations</a><a href="#hw-section-pronunciation" data-open-homework="hw-section-pronunciation">Pronunciation</a></nav><details class="homework-block" id="hw-section-past" open=""><summary>1a · Rewrite the sentences in the past</summary><div class="homework-content"><p>Write the beginning of each past sentence. The time expression is already provided.</p><p class="worked-example">1. I’m at work now.<br><strong>I was at work</strong> yesterday.</p><p class="worked-example">2. They aren’t at home today.<br><strong>They weren't at home</strong> yesterday.</p><div class="exercise" id="hwPast"><div class="fill-sentence"><span class="item-number">3.</span> <span class="source-sentence">He’s at a restaurant tonight.</span><textarea class="fill-input full-response" data-answer="He was at a restaurant" data-alternatives="[]" style="width:520px" rows="1" wrap="soft" enterkeyhint="done"></textarea> last night.</div><div class="fill-sentence"><span class="item-number">4.</span> <span class="source-sentence">We aren’t at school today.</span><input type="text" class="fill-input" data-answer="We weren't at school" data-alternatives="[]" style="width:520px"> yesterday.</div><div class="fill-sentence"><span class="item-number">5.</span> <span class="source-sentence">Are you at work now?</span><input type="text" class="fill-input" data-answer="Were you at work" data-alternatives="[]" style="width:520px"> last night?</div><div class="fill-sentence"><span class="item-number">6.</span> <span class="source-sentence">She’s at the airport this evening.</span><textarea class="fill-input full-response" data-answer="She was at the airport" data-alternatives="[]" style="width:520px" rows="1" wrap="soft" enterkeyhint="done"></textarea> yesterday evening.</div><div class="fill-sentence"><span class="item-number">7.</span> <span class="source-sentence">Is he late today?</span><input type="text" class="fill-input" data-answer="Was he late" data-alternatives="[]" style="width:520px"> yesterday?</div><div class="fill-sentence"><span class="item-number">8.</span> <span class="source-sentence">I’m not in a hurry this morning.</span><input type="text" class="fill-input" data-answer="I wasn't in a hurry" data-alternatives="[]" style="width:520px"> yesterday morning.</div><div class="fill-sentence"><span class="item-number">9.</span> <span class="source-sentence">She’s not in a hotel tonight.</span><input type="text" class="fill-input" data-answer="She wasn't in a hotel" data-alternatives="[]" style="width:520px"> last night.</div><div class="fill-sentence"><span class="item-number">10.</span> <span class="source-sentence">We’re in a café with friends this afternoon.</span><textarea class="fill-input full-response" data-answer="We were in a café with friends" data-alternatives="[]" style="width:520px" rows="1" wrap="soft" enterkeyhint="done"></textarea> yesterday afternoon.</div></div><div class="result-summary" id="hwPastResult" hidden=""></div></div></details><details class="homework-block" id="hw-section-conversations"><summary>1c · Complete the conversations</summary><div class="homework-content"><p>Use was / wasn’t or were / weren’t.</p><div class="worked-example"><p>1. A: <strong>Were</strong> you at work last week?<br>B: Yes, I <strong>was</strong>.</p></div><div class="exercise" id="hwConversations"><div class="fill-sentence"><span class="item-number">2.</span> <div class="conversation"><p><b>A</b> Where <input type="text" class="fill-input" data-answer="were" data-alternatives="[]" style="width:90px"> you last night?</p><p><b>B</b> I <input type="text" class="fill-input" data-answer="was" data-alternatives="[]" style="width:90px"> at a party.</p></div></div><div class="fill-sentence"><span class="item-number">3.</span> <div class="conversation"><p><b>A</b> <input type="text" class="fill-input" data-answer="Was" data-alternatives="[]" style="width:90px"> your friend at school yesterday?</p><p><b>B</b> No, she <input type="text" class="fill-input" data-answer="wasn't" data-alternatives="[]" style="width:100px">.</p></div></div><div class="fill-sentence"><span class="item-number">4.</span> <div class="conversation"><p><b>A</b> <input type="text" class="fill-input" data-answer="Were" data-alternatives="[]" style="width:90px"> your parents on holiday last week?</p><p><b>B</b> No, they <input type="text" class="fill-input" data-answer="weren't" data-alternatives="[]" style="width:110px">.</p></div></div><div class="fill-sentence"><span class="item-number">5.</span> <div class="conversation"><p><b>A</b> When <input type="text" class="fill-input" data-answer="was" data-alternatives="[]" style="width:90px"> your brother in Beijing?</p><p><b>B</b> He <input type="text" class="fill-input" data-answer="was" data-alternatives="[]" style="width:90px"> there last year.</p></div></div><div class="fill-sentence"><span class="item-number">6.</span> <div class="conversation"><p><b>A</b> <input type="text" class="fill-input" data-answer="Were" data-alternatives="[]" style="width:90px"> you at the museum yesterday?</p><p><b>B</b> No, we <input type="text" class="fill-input" data-answer="weren't" data-alternatives="[]" style="width:110px">.</p></div></div></div><div class="result-summary" id="hwConversationsResult" hidden=""></div></div></details><details class="homework-block" id="hw-section-pronunciation"><summary>3 · Listen, complete and copy the rhythm</summary><div class="homework-content"><p>Listen and complete the sentences. Then listen again and repeat. Copy the rhythm.</p><button class="audio-btn" data-audio-src="assets/audio/workbook-10-2.mp3" aria-label="Homework pronunciation">Homework pronunciation</button><p class="worked-example">1. Where were you last night?</p><div class="exercise" id="hwPron"><div class="fill-sentence"><span class="item-number">2.</span> Were you at <input type="text" class="fill-input" data-answer="home" data-alternatives="[]" style="width:130px">?</div><div class="fill-sentence"><span class="item-number">3.</span> I was <input type="text" class="fill-input" data-answer="alone" data-alternatives="[]" style="width:130px">.</div><div class="fill-sentence"><span class="item-number">4.</span> I <input type="text" class="fill-input" data-answer="wasn't" data-alternatives="[]" style="width:130px"> with my <input type="text" class="fill-input" data-answer="friends" data-alternatives="[]" style="width:130px">.</div><div class="fill-sentence"><span class="item-number">5.</span> Were your <input type="text" class="fill-input" data-answer="children" data-alternatives="[]" style="width:130px"> at <input type="text" class="fill-input" data-answer="school" data-alternatives="[]" style="width:130px">?</div><div class="fill-sentence"><span class="item-number">6.</span> My <input type="text" class="fill-input" data-answer="wife" data-alternatives="[]" style="width:130px"> was at <input type="text" class="fill-input" data-answer="work" data-alternatives="[]" style="width:130px">.</div></div><div class="result-summary" id="hwPronResult" hidden=""></div><p class="exercise-hint">After checking, hide the answers. Say the six sentences aloud once more.</p></div></details></section><section class="homework-part" id="homework-part-2"><h3>Part 2 · after Lesson 2</h3><p>Questions and answers, picture sentences, personal answers and words from the video.</p><nav class="homework-links" aria-label="Part 2 · after Lesson 2 sections"><a href="#hw-section-questions" data-open-homework="hw-section-questions">Questions</a><a href="#hw-section-places" data-open-homework="hw-section-places">Picture sentences</a><a href="#hw-section-personal" data-open-homework="hw-section-personal">About you</a><a href="#hw-section-words" data-open-homework="hw-section-words">Words</a></nav><details class="homework-block" id="hw-section-questions"><summary>1b · Write questions and short answers</summary><div class="homework-content"><p>Use the cues. ✓ = yes; ✗ = no. Focus on the grammar; the symbols give you the answer.</p><p class="worked-example">1. Picasso / a painter / ✓<br><strong>Was Picasso a painter?<br>Yes, he was.</strong></p><p class="worked-example">2. the Beatles / from the United States / ✗<br><strong>Were the Beatles from the United States?<br>No, they weren't.</strong></p><div class="exercise" id="hwQuestions"><div class="fill-sentence"><span class="item-number">3.</span> <span class="source-sentence">Nelson Mandela / American / ✗</span><label class="response-line">Question <textarea class="fill-input full-response" data-answer="Was Nelson Mandela American?" data-alternatives="[&quot;Was Nelson Mandela an American?&quot;]" style="width:620px" rows="1" wrap="soft" enterkeyhint="done"></textarea></label><label class="response-line">Answer <input type="text" class="fill-input" data-answer="No, he wasn't." data-alternatives="[]" style="width:300px"></label></div><div class="fill-sentence"><span class="item-number">4.</span> <span class="source-sentence">Charlotte Brontë and Jane Austen / writers / ✓</span><label class="response-line">Question <textarea class="fill-input full-response" data-answer="Were Charlotte Brontë and Jane Austen writers?" data-alternatives="[]" style="width:620px" rows="1" wrap="soft" enterkeyhint="done"></textarea></label><label class="response-line">Answer <input type="text" class="fill-input" data-answer="Yes, they were." data-alternatives="[]" style="width:300px"></label></div><div class="fill-sentence"><span class="item-number">5.</span> <span class="source-sentence">Carmen Miranda / Brazilian / ✓</span><label class="response-line">Question <textarea class="fill-input full-response" data-answer="Was Carmen Miranda Brazilian?" data-alternatives="[&quot;Was Carmen Miranda a Brazilian?&quot;]" style="width:620px" rows="1" wrap="soft" enterkeyhint="done"></textarea></label><label class="response-line">Answer <input type="text" class="fill-input" data-answer="Yes, she was." data-alternatives="[]" style="width:300px"></label></div><div class="fill-sentence"><span class="item-number">6.</span> <span class="source-sentence">Monet and Matisse / musicians / ✗</span><label class="response-line">Question <textarea class="fill-input full-response" data-answer="Were Monet and Matisse musicians?" data-alternatives="[]" style="width:620px" rows="1" wrap="soft" enterkeyhint="done"></textarea></label><label class="response-line">Answer <input type="text" class="fill-input" data-answer="No, they weren't." data-alternatives="[]" style="width:300px"></label></div><div class="fill-sentence"><span class="item-number">7.</span> <span class="source-sentence">Frida Kahlo / a musician / ✗</span><label class="response-line">Question <textarea class="fill-input full-response" data-answer="Was Frida Kahlo a musician?" data-alternatives="[]" style="width:620px" rows="1" wrap="soft" enterkeyhint="done"></textarea></label><label class="response-line">Answer <input type="text" class="fill-input" data-answer="No, she wasn't." data-alternatives="[]" style="width:300px"></label></div><div class="fill-sentence"><span class="item-number">8.</span> <span class="source-sentence">Steve Jobs and Thomas Edison / American / ✓</span><label class="response-line">Question <textarea class="fill-input full-response" data-answer="Were Steve Jobs and Thomas Edison American?" data-alternatives="[&quot;Were Steve Jobs and Thomas Edison Americans?&quot;]" style="width:620px" rows="1" wrap="soft" enterkeyhint="done"></textarea></label><label class="response-line">Answer <input type="text" class="fill-input" data-answer="Yes, they were." data-alternatives="[]" style="width:300px"></label></div></div><div class="result-summary" id="hwQuestionsResult" hidden=""></div></div></details><details class="homework-block" id="hw-section-places"><summary>2a · Where were these people yesterday?</summary><div class="homework-content"><p>Write full sentences with was / were, in / on / at, and a word from the list.</p><div class="phrase-bank">bed · car · home · kitchen · park · plane · restaurant · street · train · work</div><div class="exercise" id="hwPlaces"><div class="picture-grid"><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="A woman reading on a train" style="width:492.06896551724134%;left:-29.310344827586203%;top:-133.19148936170214%"></span><p class="picture-number">1</p><p class="worked-example">She was on a train.</p></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="Two people with menus and a waiter" style="width:492.06896551724134%;left:-147.9310344827586%;top:-133.19148936170214%"></span><p class="picture-number">2</p><textarea class="fill-input full-response" data-answer="They were in a restaurant." data-alternatives="[&quot;They were at a restaurant.&quot;]" style="width:430px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="A woman driving a car" style="width:492.06896551724134%;left:-29.310344827586203%;top:-255.7446808510638%"></span><p class="picture-number">3</p><input type="text" class="fill-input" data-answer="She was in her car." data-alternatives="[&quot;She was in the car.&quot;,&quot;She was in a car.&quot;]" style="width:430px"></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="A man standing in a kitchen" style="width:492.06896551724134%;left:-147.9310344827586%;top:-255.7446808510638%"></span><p class="picture-number">4</p><textarea class="fill-input full-response" data-answer="He was in the kitchen." data-alternatives="[]" style="width:430px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="A man looking through an aeroplane window" style="width:492.06896551724134%;left:-29.310344827586203%;top:-378.2978723404255%"></span><p class="picture-number">5</p><input type="text" class="fill-input" data-answer="He was on a plane." data-alternatives="[]" style="width:430px"></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="Two people playing with a frisbee in a park" style="width:492.06896551724134%;left:-147.9310344827586%;top:-378.2978723404255%"></span><p class="picture-number">6</p><input type="text" class="fill-input" data-answer="They were in a park." data-alternatives="[&quot;They were in the park.&quot;,&quot;They were at a park.&quot;,&quot;They were at the park.&quot;]" style="width:430px"></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="A man working at an office computer" style="width:492.06896551724134%;left:-29.310344827586203%;top:-501.2765957446809%"></span><p class="picture-number">7</p><input type="text" class="fill-input" data-answer="He was at work." data-alternatives="[]" style="width:430px"></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="Two people asleep in beds" style="width:492.06896551724134%;left:-147.9310344827586%;top:-501.2765957446809%"></span><p class="picture-number">8</p><input type="text" class="fill-input" data-answer="They were in bed." data-alternatives="[]" style="width:430px"></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="A woman walking her dog along a street" style="width:492.06896551724134%;left:-29.310344827586203%;top:-624.2553191489361%"></span><p class="picture-number">9</p><textarea class="fill-input full-response" data-answer="She was in the street." data-alternatives="[&quot;She was on the street.&quot;,&quot;She was in a street.&quot;]" style="width:430px" rows="1" wrap="soft" enterkeyhint="done"></textarea></div><div class="picture-task"><span class="workbook-picture" style="aspect-ratio:290/235"><img src="assets/images/homework-locations-reference.png" alt="A woman looking out from her home" style="width:492.06896551724134%;left:-147.9310344827586%;top:-624.2553191489361%"></span><p class="picture-number">10</p><input type="text" class="fill-input" data-answer="She was at home." data-alternatives="[]" style="width:430px"></div></div></div><div class="result-summary" id="hwPlacesResult" hidden=""></div></div></details><details class="homework-block" id="hw-section-personal"><summary>2b · Answer about you</summary><div class="homework-content"><p>Write true answers. These are open answers for your teacher to review.</p><p class="worked-example">1. Where were you at 6.30 yesterday morning?<br>Example: I was in bed.</p><label class="open-response">1. Where were you at 6.30 yesterday morning?<textarea class="writing-area" data-note-key="hw-personal-1" placeholder="I was …"></textarea></label><label class="open-response">2. Where were you at 11.00 yesterday morning?<textarea class="writing-area" data-note-key="hw-personal-2" placeholder="I was …"></textarea></label><label class="open-response">3. Where were you at 2.00 yesterday afternoon?<textarea class="writing-area" data-note-key="hw-personal-3" placeholder="I was …"></textarea></label><label class="open-response">4. Where were you at 5.30 yesterday afternoon?<textarea class="writing-area" data-note-key="hw-personal-4" placeholder="I was …"></textarea></label><label class="open-response">5. Where were you at 9.00 last night?<textarea class="writing-area" data-note-key="hw-personal-5" placeholder="I was …"></textarea></label><label class="open-response">6. Where were you at 11.00 last night?<textarea class="writing-area" data-note-key="hw-personal-6" placeholder="I was …"></textarea></label><label class="open-response">7. Where were you last Friday night?<textarea class="writing-area" data-note-key="hw-personal-7" placeholder="I was …"></textarea></label><label class="open-response">8. Where were you last Saturday afternoon?<textarea class="writing-area" data-note-key="hw-personal-8" placeholder="I was …"></textarea></label></div></details><details class="homework-block" id="hw-section-words"><summary>4 · Words and phrases to learn</summary><div class="homework-content"><p>Complete the sentences with words from the list.</p><div class="phrase-bank">century · luxury · secret · strong · together</div><p class="worked-example">1. There was a robbery in the bank <strong>last</strong> night and that man in the photo is a <strong>suspect</strong>.</p><div class="exercise" id="hwWords"><div class="fill-sentence"><span class="item-number">2.</span> There’s a new <input type="text" class="fill-input" data-answer="luxury" data-alternatives="[]" style="width:150px"> hotel in town — it’s very expensive to stay there.</div><div class="fill-sentence"><span class="item-number">3.</span> Please don’t tell my friends about this problem. It’s a <input type="text" class="fill-input" data-answer="secret" data-alternatives="[]" style="width:150px">.</div><div class="fill-sentence"><span class="item-number">4.</span> The castle has very <input type="text" class="fill-input" data-answer="strong" data-alternatives="[]" style="width:150px"> walls.</div><div class="fill-sentence"><span class="item-number">5.</span> In the nineteenth <input type="text" class="fill-input" data-answer="century" data-alternatives="[]" style="width:150px">, the building was a factory, but it’s a hotel now.</div><div class="fill-sentence"><span class="item-number">6.</span> Toby’s parents were at school <input type="text" class="fill-input" data-answer="together" data-alternatives="[]" style="width:150px">.</div></div><div class="result-summary" id="hwWordsResult" hidden=""></div></div></details></section><details class="lesson-notes"><summary>Optional: bring your own story</summary><p>Use your personal answers to write four to six sentences about yesterday. Include a negative sentence. Make a short voice recording on your phone and bring it to the next lesson.</p><label class="open-response">My short story<textarea class="writing-area" data-note-key="hw-story" placeholder="Yesterday morning, I was …"></textarea></label></details><div class="oral-task"><h4>Before the next lesson</h4><p>Check: was or were? · correct place phrase? · question word order? Practise two answers without reading.</p></div></div></section>
+</div>
+<!-- Vocabulary Support Card Overlay -->
     <div class="vocab-overlay" id="vocabOverlay" onclick="closeVocabCard(event)">
         <div class="vocab-card" role="dialog" aria-modal="true" aria-labelledby="vcWord" tabindex="-1" onclick="event.stopPropagation()">
-            <button aria-label="Close word card" class="close-btn" onclick="closeVocabCard()">&times;</button>
+            <button aria-label="Close word card" class="close-btn" onclick="closeVocabCard()">×</button>
             <div class="vc-word" id="vcWord"></div>
             <div class="vc-ipa" id="vcIpa"></div>
             <div class="vc-pos" id="vcPos"></div>
@@ -1198,27 +192,6 @@
     </div>
 
     
-<script>const vocabData = {
-            detective: { word: 'detective', ipa: '/dɪˈtek.tɪv/', pos: 'noun', def: 'A person whose job is to investigate crimes and find out what happened.', examples: ['The detective looked for clues at the bank.', 'She wants to be a detective.'], translation: 'детектив, сыщик' },
-            suspect: { word: 'suspect', ipa: '/ˈsʌs.pekt/', pos: 'noun', def: 'A person who the police think maybe did a crime.', examples: ['The police had one suspect: a man in a black coat.', 'He was the main suspect in the robbery.'], translation: 'подозреваемый' },
-            robbery: { word: 'robbery', ipa: '/ˈrɒb.ər.i/', pos: 'noun', def: 'A crime when someone steals money or things from a person, bank, or shop.', examples: ['There was a robbery at the bank yesterday.', 'The robbery happened at 3 o\'clock.'], translation: 'ограбление' },
-            prison: { word: 'prison', ipa: '/ˈprɪz.ən/', pos: 'noun', def: 'A place where people are kept as punishment for a crime.', examples: ['The suspect was in prison for two days.', 'He went to prison last year.'], translation: 'тюрьма' },
-            pub: { word: 'pub', ipa: '/pʌb/', pos: 'noun', def: 'A place in Britain where people go to drink alcohol and talk.', examples: ['They met at the pub at 7 o\'clock.', 'We were in a pub last night.'], translation: 'паб, бар' },
-            alone: { word: 'alone', ipa: '/əˈləʊn/', pos: 'adjective', def: 'By yourself, with no other people.', examples: ['She was at home alone.', 'Were you alone?'], translation: 'один, одна' },
-            tired: { word: 'tired', ipa: '/ˈtaɪəd/', pos: 'adjective', def: 'Feeling that you need to rest or sleep.', examples: ['He was tired last night.', 'Sarah and Emma were tired this morning.'], translation: 'уставший' },
-            singer: { word: 'singer', ipa: '/ˈsɪŋ.ər/', pos: 'noun', def: 'A person who sings, especially as a job.', examples: ['Was she a singer?', 'He was a singer with Queen.'], translation: 'певец, певица' },
-            actor: { word: 'actor', ipa: '/ˈæk.tər/', pos: 'noun', def: 'A person who performs in films, plays, or television.', examples: ['Was Freddie Mercury an actor?', 'He wants to be an actor.'], translation: 'актёр' },
-            meeting: { word: 'meeting', ipa: '/ˈmiː.tɪŋ/', pos: 'noun', def: 'An occasion when people come together to talk about something.', examples: ['I was in a meeting until 7.00.', 'She was at a meeting at 3 o\'clock.'], translation: 'встреча, совещание' },
-            film: { word: 'film', ipa: '/fɪlm/', pos: 'noun', def: 'A story told with moving pictures, shown at the cinema or on TV.', examples: ['It was a terrible film.', 'We were at the cinema last night.'], translation: 'фильм' },
-            'shopping centre': { word: 'shopping centre', ipa: '/ˈʃɒp.ɪŋ ˌsen.tər/', pos: 'noun', def: 'A large building with many shops inside.', examples: ['I was at the shopping centre.', 'We were in a shopping centre on Saturday.'], translation: 'торговый центр' },
-            wife: { word: 'wife', ipa: '/waɪf/', pos: 'noun', def: 'The woman that a man is married to.', examples: ['His wife says he was out.', 'Where was Jason\'s wife?'], translation: 'жена' },
-            friend: { word: 'friend', ipa: '/frend/', pos: 'noun', def: 'A person you like and enjoy spending time with.', examples: ['I was with a friend.', 'Jason\'s friend Kevin was at the pub.'], translation: 'друг' },
-            famous: { word: 'famous', ipa: '/ˈfeɪ.məs/', pos: 'adjective', def: 'Known by many people.', examples: ['They were famous in the 60s.', 'She was a famous singer.'], translation: 'знаменитый' },
-            beach: { word: 'beach', ipa: '/biːtʃ/', pos: 'noun', def: 'An area of sand or stones next to the sea.', examples: ['I was on the beach.', 'We were on the beach last summer.'], translation: 'пляж' },
-            at: { word: 'at', ipa: '/æt/', pos: 'preposition', def: 'Used for specific times and places.', examples: ['The meeting was at 3 o\'clock.', 'I was at home.'], translation: 'в, у (о времени и месте)' },
-            on: { word: 'on', ipa: '/ɒn/', pos: 'preposition', def: 'Used for days, dates, and surfaces/transport.', examples: ['I was at work on Monday.', 'She was on a bus.'], translation: 'в (о днях), на' },
-            in: { word: 'in', ipa: '/ɪn/', pos: 'preposition', def: 'Used for months, years, parts of the day, and enclosed spaces.', examples: ['She was at the park in the afternoon.', 'He was in the kitchen.'], translation: 'в (о месяцах, частях дня, внутри)' },
-            was: { word: 'was', ipa: '/wɒz/', pos: 'verb (past of "be")', def: 'Past form of "be" for I, he, she, it.', examples: ['He was at the office.', 'I was tired yesterday.'], translation: 'был, была, было' },
-            were: { word: 'were', ipa: '/wɜː/', pos: 'verb (past of "be")', def: 'Past form of "be" for you, we, they.', examples: ['They were at the cinema.', 'We were happy.'], translation: 'были' }
-        };</script><script src="lesson.js"></script><dialog id="referenceDialog"><button class="close-reference" type="button" onclick="document.getElementById('referenceDialog').close()">Close reference ×</button><div id="referenceContent"></div></dialog></body>
-</html>
+<script src="lesson.js"></script><dialog id="referenceDialog"><button class="close-reference" type="button" onclick="document.getElementById('referenceDialog').close()">Close reference ×</button><div id="referenceContent"></div></dialog>
+
+</body></html>
